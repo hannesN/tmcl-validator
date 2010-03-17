@@ -1,0 +1,33 @@
+%encoding "utf-8"
+%version 1.0
+
+# --[ Prefixes ]--------------------------------------------------------------------------------------
+
+%prefix tmcl <http://psi.topicmaps.org/tmcl/>
+%prefix tmdm <http://psi.topicmaps.org/iso13250/model/>
+
+%prefix validator <http://tmclvalidator.topicmapslab.de/>
+
+
+# --[ instances ]-------------------------------------------------------------------------------------
+
+validator:continent_1 isa validator:continent.
+validator:continent_2 isa validator:continent.	
+
+validator:country_1 isa validator:country.
+validator:country_2 isa validator:country.	
+
+validator:province_1 isa validator:province.
+validator:province_2 isa validator:province.	
+
+validator:city_1 isa validator:city.
+validator:city_2 isa validator:city.	
+
+# --[ associations ]----------------------------------------------------------------------------------
+
+validator:contained-in(validator:container : validator:continent_1, validator:containee : validator:country_1, validator:containee : validator:province_1)
+validator:contained-in(validator:container : validator:country_1, validator:containee : validator:province_1, validator:containee : validator:city_1)
+validator:contained-in(validator:container : validator:province_1, validator:containee : validator:city_1, validator:containee : validator:continent_1)
+
+
+	

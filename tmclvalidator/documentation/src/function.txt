@@ -1,0 +1,17 @@
+=== Functionality
+
+The main functionality is to validate a topic map against a topic map schema.
+
+_Note:_ In the current implementation of the TMCL validator merges the topic map with the schema 
+to increase the performance of the validation process as well as makes it easier to implement. 
+This however, will change the topic map, therefore it is not recommended to use the topic map instance 
+further after an validation process.
+
+To use the validator you have to create a new instance of the TMCLValidator class and give the constuctor an TMAPI instance 
+of the topic map schema. 
+Afterwards just call the validate() method give the to be validated topic map as an parameter. 
+The method returns a map of invalid topic map constructs together with a set of results for each construct.
+A result consists of the constraint id, i.e the subject identifier of the violated TMCL constraint, and an error message. 
+For each result, you can access the constraint id via getConstraintId() and the error message via getMessage().
+
+

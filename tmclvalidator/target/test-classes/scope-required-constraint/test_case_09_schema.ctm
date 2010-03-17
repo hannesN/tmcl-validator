@@ -1,0 +1,39 @@
+%encoding "utf-8"
+%version 1.0
+
+# --[ Prefixes ]--------------------------------------------------------------------------------------
+
+%prefix tmcl <http://psi.topicmaps.org/tmcl/>
+%prefix tmdm <http://psi.topicmaps.org/iso13250/model/>
+
+%prefix validator <http://tmclvalidator.topicmapslab.de/>
+
+
+# --[ occurrence types ]------------------------------------------------------------------------------
+
+validator:occurrences_type_1 isa tmcl:occurrence-type.
+
+# --[ name types ]------------------------------------------------------------------------------------
+
+validator:name_type_1 isa tmcl:name-type.
+
+# --[ topic types ]-----------------------------------------------------------------------------------
+
+validator:topic_type_1 isa tmcl:topic-type;
+	requires-scope(validator:name_type_1, validator:scope_1, 1, 1);
+	requires-scope(validator:occurrences_type_1, validator:scope_2, 1, 1).
+	
+validator:topic_type_2 isa tmcl:topic-type;
+	overlaps(validator:topic_type_1);
+	requires-scope(validator:occurrences_type_1, validator:scope_3, 1, 1).
+
+validator:scope_type isa tmcl:topic-type.
+
+# --[ instances ]-------------------------------------------------------------------------------------
+
+validator:scope_1 isa validator:scope_type.
+validator:scope_2 isa validator:scope_type.
+validator:scope_3 isa validator:scope_type.
+
+
+

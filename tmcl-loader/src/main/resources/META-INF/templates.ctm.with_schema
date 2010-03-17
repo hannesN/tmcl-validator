@@ -1,0 +1,545 @@
+#########################################################################
+# TMCL - Topic Maps Constraint Language
+# This file defines the set of templates defined in the TMCL standard
+# This document is located at http://www.isotopicmaps.org/tmcl/templates.ctm 
+# and is normative.
+# Draft version of 2009-10-19.
+#########################################################################
+
+# prefix declarations
+%prefix tmcl <http://psi.topicmaps.org/tmcl/>
+%prefix tmdm <http://psi.topicmaps.org/iso13250/model/>
+
+%prefix xsd <http://www.w3.org/2001/XMLSchema#>
+%prefix ctm <http://www.isotopicmaps.org/ctm/>
+
+
+# Overlap Declaration
+def overlaps($tt1, $tt2)
+  ?c isa tmcl:overlap-declaration.
+  tmcl:overlaps(tmcl:allows : ?c, tmcl:allowed : $tt1)
+  tmcl:overlaps(tmcl:allows : ?c, tmcl:allowed : $tt2)
+end
+
+# Abstract Topic Type Constraint
+def is-abstract($tt)
+  ?c isa tmcl:abstract-constraint.
+  tmcl:constrained-topic-type(tmcl:constrains : ?c, tmcl:constrained : $tt)
+end
+
+# Subject Identifier Constraint
+def has-subject-identifier($tt, $min, $max, $regexp)
+  ?c isa tmcl:subject-identifier-constraint;
+    tmcl:card-min: $min;
+    tmcl:card-max: $max;
+    tmcl:regexp: $regexp.
+  tmcl:constrained-topic-type(tmcl:constrains : ?c, tmcl:constrained : $tt)
+end
+
+# Subject Locator Constraint
+def has-subject-locator($tt, $min, $max, $regexp)
+  ?c isa tmcl:subject-locator-constraint;
+    tmcl:card-min: $min;
+    tmcl:card-max: $max;
+    tmcl:regexp: $regexp.
+  tmcl:constrained-topic-type(tmcl:constrains : ?c, tmcl:constrained : $tt)
+end
+
+# Topic Name Constraint
+def has-name($tt, $nt, $min, $max)
+  ?c isa tmcl:topic-name-constraint;
+    tmcl:card-min: $min;
+    tmcl:card-max: $max.
+  
+  tmcl:constrained-topic-type(tmcl:constrains : ?c, tmcl:constrained : $tt)  
+  tmcl:constrained-statement(tmcl:constrains : ?c, tmcl:constrained : $nt)
+end
+
+# Topic Occurrence Constraint
+def has-occurrence($tt, $ot, $min, $max)
+  ?c isa tmcl:topic-occurrence-constraint;
+    tmcl:card-min: $min;
+    tmcl:card-max: $max.
+  
+  tmcl:constrained-topic-type(tmcl:constrains : ?c, tmcl:constrained : $tt)  
+  tmcl:constrained-statement(tmcl:constrains : ?c, tmcl:constrained : $ot)
+end
+
+# Topic Role Constraint
+def plays-role($tt, $rt, $at, $min, $max)
+  ?c isa tmcl:topic-role-constraint;
+    tmcl:card-min: $min;
+    tmcl:card-max: $max.
+  
+  tmcl:constrained-topic-type(tmcl:constrains : ?c, tmcl:constrained : $tt)  
+  tmcl:constrained-statement(tmcl:constrains : ?c, tmcl:constrained : $at)
+  tmcl:constrained-role(tmcl:constrains : ?c, tmcl:constrained : $rt)
+end
+
+# Scope Constraint
+def has-scope($st, $tt, $min, $max)
+  ?c isa tmcl:scope-constraint;
+    tmcl:card-min: $min;
+    tmcl:card-max: $max.
+  
+  tmcl:constrained-statement(tmcl:constrains : ?c, tmcl:constrained : $st)
+  tmcl:allowed-scope(tmcl:allows : ?c, tmcl:allowed : $tt)
+end
+
+# Scope Required Constraint
+def requires-scope($tt, $st, $t, $min, $max)
+  ?c isa tmcl:scope-required-constraint;
+  tmcl:card-min: $min;
+  tmcl:card-max: $max.
+
+  tmcl:constrained-topic-type(tmcl:constrains : ?c, tmcl:constrained : $tt)
+  tmcl:constrained-statement(tmcl:constrains : ?c, tmcl:constrained : $st)
+  tmcl:required-scope(tmcl:constrains : ?c, tmcl:constrained : $t)
+end
+
+# Reifier Constraint
+def must-have-reifier($st, $tt)
+  ?c isa tmcl:reifier-constraint;
+    tmcl:card-min: 1;
+    tmcl:card-max: 1.
+  tmcl:constrained-statement(tmcl:constrains: ?c, tmcl:constrained: $st)
+  tmcl:allowed-reifier(tmcl:allows: ?c, tmcl:allowed: $tt)
+end
+
+def cannot-have-reifier($st)
+  ?c isa tmcl:reifier-constraint;
+    tmcl:card-min: 0;
+    tmcl:card-max: 0.
+  tmcl:constrained-statement(tmcl:constrains: ?c, tmcl:constrained: $st)
+  tmcl:allowed-reifier(tmcl:allows: ?c, tmcl:allowed: tmdm:subject)
+end
+
+def may-have-reifier($st, $tt)
+  ?c isa tmcl:reifier-constraint;
+    tmcl:card-min: 0;
+    tmcl:card-max: 1.
+  tmcl:constrained-statement(tmcl:constrains: ?c, tmcl:constrained: $st)
+  tmcl:allowed-reifier(tmcl:allows: ?c, tmcl:allowed: $tt)
+end
+
+# Topic Reifies Constraint
+def must-reify($tt, $st)
+  ?c isa tmcl:topic-reifies-constraint;
+    tmcl:card-min: 1;
+    tmcl:card-max: 1.
+  tmcl:constrained-topic-type(tmcl:constrains: ?c, tmcl:constrained: $tt)
+  tmcl:constrained-statement(tmcl:constrains: ?c, tmcl:constrained: $st)
+end
+
+def cannot-reify($tt)
+  ?c isa tmcl:topic-reifies-constraint;
+    tmcl:card-min: 0;
+    tmcl:card-max: 0.
+  tmcl:constrained-topic-type(tmcl:constrains: ?c, tmcl:constrained: $tt)
+end
+
+def may-reify($tt, $st)
+  ?c isa tmcl:topic-reifies-constraint;
+    tmcl:card-min: 0;
+    tmcl:card-max: 1.
+  tmcl:constrained-topic-type(tmcl:constrains: ?c, tmcl:constrained: $tt)
+  tmcl:constrained-statement(tmcl:constrains: ?c, tmcl:constrained: $st)
+end
+
+# Association Role Constraint
+def has-role($at, $rt, $min, $max)
+  ?c isa tmcl:association-role-constraint;
+    tmcl:card-min: $min;
+    tmcl:card-max: $max.
+  
+  tmcl:constrained-statement(tmcl:constrains : ?c, tmcl:constrained : $at)
+  tmcl:constrained-role(tmcl:constrains : ?c, tmcl:constrained : $rt)
+end
+
+# Role Combination Constraint
+def role-combination($at, $rt, $tt, $ort, $ott)
+  ?c isa tmcl:role-combination-constraint.
+  tmcl:constrained-statement(tmcl:constrains: ?c, tmcl:constrained: $at)
+  tmcl:constrained-role(tmcl:constrains: ?c, tmcl:constrained: $rt)
+  tmcl:constrained-topic-type(tmcl:constrains: ?c, tmcl:constrained: $tt)
+  tmcl:other-constrained-role(tmcl:constrains: ?c, tmcl:constrained: $ort)
+  tmcl:other-constrained-topic-type(tmcl:constrains: ?c, tmcl:constrained: $ott)
+end
+
+# Occurrence Data Type Constraint
+def has-datatype($ot, $dt)
+  ?c isa tmcl:occurrence-datatype-constraint;
+    tmcl:datatype: $dt.
+  tmcl:constrained-statement(tmcl:constrains : ?c, tmcl:constrained : $ot)
+end
+
+# Unique Value Constraint
+def has-unique-value($st)
+  ?c isa tmcl:unique-value-constraint.
+  tmcl:constrained-statement(tmcl:constrains : ?c, tmcl:constrained : $st)
+end
+
+# Regular Expression Constraint
+def matches-regexp($st, $regexp)
+  ?c isa tmcl:regular-expression-constraint;
+    tmcl:regexp: $regexp.
+  
+  tmcl:constrained-statement(tmcl:constrains: ?c, tmcl:constrained: $st)
+end
+
+# Additional TMCL Templates
+def binary-association($at, $rt1, $rt2)
+  $at isa tmcl:association-type;
+    has-role($rt1, 1, 1);
+    has-role($rt2, 1, 1).
+
+  $rt1 isa tmcl:role-type.
+  $rt2 isa tmcl:role-type.
+end
+
+# Additional TMCL Templates
+def symmetric-association($at, $rt)
+  $at isa tmcl:association-type;
+    has-role($rt, 2, 2).
+
+  $rt isa tmcl:role-type.
+end
+
+# The Schema Topic
+def belongs-to($construct, $schema)
+  tmcl:belongs-to-schema(tmcl:container: $schema, tmcl:containee: $construct)
+end
+
+# --[ TMCL META SCHEMA ]---------------------------------------------------
+
+# TOPIC TYPE
+tmcl:topic-type isa tmcl:topic-type;
+  - "Topic type";
+  has-occurrence(tmcl:description, 0, 1);
+  has-occurrence(tmcl:comment, 0, "*" ^^ctm:integer);
+  has-occurrence(tmcl:see-also, 0, "*" ^^ctm:integer);
+  plays-role(tmcl:constrained, tmcl:constrained-topic-type, 0, "*" ^^ctm:integer);
+  plays-role(tmcl:containee, tmcl:belongs-to, 0, 1);
+  plays-role(tmcl:allowed, tmcl:overlaps, 0, "*" ^^ctm:integer);
+  plays-role(tmcl:constrained, tmcl:other-constrained-topic-type, 0, "*" ^^ctm:integer);
+  plays-role(tmcl:allowed, tmcl:allowed-scope, 0, "*" ^^ctm:integer);
+  plays-role(tmcl:allowed, tmcl:allowed-reifier, 0, "*" ^^ctm:integer);
+  overlaps(tmcl:name-type);
+  overlaps(tmcl:occurrence-type);
+  overlaps(tmcl:association-type);
+  overlaps(tmcl:role-type).
+  
+  # NAME TYPE
+tmcl:name-type isa tmcl:topic-type;
+  - "Name type";
+  has-occurrence(tmcl:description, 0, 1);
+  has-occurrence(tmcl:comment, 0, "*" ^^ctm:integer);
+  has-occurrence(tmcl:see-also, 0, "*" ^^ctm:integer);
+  plays-role(tmcl:constrained, tmcl:constrained-statement, 0, "*" ^^ctm:integer);
+  plays-role(tmcl:containee, tmcl:belongs-to, 0, 1).
+  
+  # OCCURRENCE TYPE
+tmcl:occurrence-type isa tmcl:topic-type;
+  - "Occurrence type";
+  has-occurrence(tmcl:description, 0, 1);
+  has-occurrence(tmcl:comment, 0, "*" ^^ctm:integer);
+  has-occurrence(tmcl:see-also, 0, "*" ^^ctm:integer);
+  plays-role(tmcl:constrained, tmcl:constrained-statement, 0, "*" ^^ctm:integer);
+  plays-role(tmcl:containee, tmcl:belongs-to, 0, 1).
+  
+  # ASSOCIATION TYPE
+tmcl:association-type isa tmcl:topic-type;
+  - "Association type";
+  has-occurrence(tmcl:description, 0, 1);
+  has-occurrence(tmcl:comment, 0, "*" ^^ctm:integer);
+  has-occurrence(tmcl:see-also, 0, "*" ^^ctm:integer);
+  plays-role(tmcl:constrained, tmcl:constrained-statement, 0, "*" ^^ctm:integer);
+  plays-role(tmcl:containee, tmcl:belongs-to, 0, 1).
+  
+  # ROLE TYPE
+tmcl:role-type isa tmcl:topic-type;
+  - "Role type";
+  has-occurrence(tmcl:description, 0, 1);
+  has-occurrence(tmcl:comment, 0, "*" ^^ctm:integer);
+  has-occurrence(tmcl:see-also, 0, "*" ^^ctm:integer);
+  plays-role(tmcl:constrained, tmcl:constrained-statement, 0, "*" ^^ctm:integer);
+  plays-role(tmcl:constrained, tmcl:constrained-role, 0, "*" ^^ctm:integer);
+  plays-role(tmcl:containee, tmcl:belongs-to, 0, 1).
+  
+  # OVERLAP DECLARATION
+tmcl:overlap-declaration isa tmcl:topic-type;
+  - "Overlap declaration";
+  has-occurrence(tmcl:description, 0, 1);
+  has-occurrence(tmcl:comment, 0, "*" ^^ctm:integer);
+  has-occurrence(tmcl:see-also, 0, "*" ^^ctm:integer);
+  plays-role(tmcl:allows, tmcl:overlaps, 2, "*" ^^ctm:integer);
+  plays-role(tmcl:containee, tmcl:belongs-to, 0, 1).
+  
+  # CONSTRAINT
+tmcl:constraint isa tmcl:topic-type;
+  - "Constraint";
+  is-abstract();
+  has-occurrence(tmcl:description, 0, 1);
+  has-occurrence(tmcl:comment, 0, "*" ^^ctm:integer);
+  has-occurrence(tmcl:see-also, 0, "*" ^^ctm:integer);
+  plays-role(tmcl:containee, tmcl:belongs-to, 0, 1).
+  
+  # CARD-MIN and CARD-MAX
+tmcl:card-min isa tmcl:occurrence-type;
+  - "Minimum cardinality";
+  has-datatype(ctm:integer).
+  
+  tmcl:card-max isa tmcl:occurrence-type;
+  - "Maximum cardinality";
+  has-datatype(ctm:integer).
+  
+  # REGEXP
+tmcl:regexp isa tmcl:occurrence-type;
+  - "Regular expression";
+  has-datatype(xsd:string).
+  
+  # ABSTRACT CONSTRAINT
+tmcl:abstract-constraint ako tmcl:constraint;
+  - "Abstract constraint";
+  plays-role(tmcl:constrains, tmcl:constrained-topic-type, 1, 1).
+  
+  # SUBJECT IDENTIFIER CONSTRAINT
+tmcl:subject-identifier-constraint ako tmcl:constraint;
+  - "Subject identifier constraint";
+  has-occurrence(tmcl:card-min, 0, 1);
+  has-occurrence(tmcl:card-max, 0, 1);
+  has-occurrence(tmcl:regexp, 0, 1);
+  plays-role(tmcl:constrains, tmcl:constrained-topic-type, 1, 1).
+
+# SUBJECT LOCATOR CONSTRAINT
+tmcl:subject-locator-constraint ako tmcl:constraint;
+  - "Subject locator constraint";
+  has-occurrence(tmcl:card-min, 0, 1);
+  has-occurrence(tmcl:card-max, 0, 1);
+  has-occurrence(tmcl:regexp, 0, 1);
+  plays-role(tmcl:constrains, tmcl:constrained-topic-type, 1, 1).
+  
+  # TOPIC NAME CONSTRAINT
+tmcl:topic-name-constraint ako tmcl:constraint;
+  - "Topic name constraint";
+  has-occurrence(tmcl:card-min, 0, 1);
+  has-occurrence(tmcl:card-max, 0, 1);
+  plays-role(tmcl:constrains, tmcl:constrained-topic-type, 1, 1);
+  plays-role(tmcl:constrains, tmcl:constrained-statement, 1, 1).
+
+# TOPIC OCCURRENCE CONSTRAINT
+tmcl:topic-occurrence-constraint ako tmcl:constraint;
+  - "Topic occurrence constraint";
+  has-occurrence(tmcl:card-min, 0, 1);
+  has-occurrence(tmcl:card-max, 0, 1);
+  plays-role(tmcl:constrains, tmcl:constrained-topic-type, 1, 1);
+  plays-role(tmcl:constrains, tmcl:constrained-statement, 1, 1).
+  
+  # ROLE PLAYER CONSTRAINT
+tmcl:topic-role-constraint ako tmcl:constraint;
+  - "Topic role constraint";
+  has-occurrence(tmcl:card-min, 0, 1);
+  has-occurrence(tmcl:card-max, 0, 1);
+  plays-role(tmcl:constrains, tmcl:constrained-statement, 1, 1);
+  plays-role(tmcl:constrains, tmcl:constrained-role, 1, 1);
+  plays-role(tmcl:constrains, tmcl:constrained-topic-type, 1, 1).
+
+# SCOPE CONSTRAINT
+tmcl:scope-constraint ako tmcl:constraint;
+  - "Scope constraint";
+  has-occurrence(tmcl:card-min, 0, 1);
+  has-occurrence(tmcl:card-max, 0, 1);
+  plays-role(tmcl:constrains, tmcl:constrained-statement, 1, 1);
+  plays-role(tmcl:allows, tmcl:allowed-scope, 1, 1).
+  
+  # REIFIER CONSTRAINT
+tmcl:reifier-constraint ako tmcl:constraint;
+  - "Reifier constraint";
+  has-occurrence(tmcl:card-min, 0, 1);
+  has-occurrence(tmcl:card-max, 0, 1);
+  plays-role(tmcl:constrains, tmcl:constrained-statement, 1, 1);
+  plays-role(tmcl:allows, tmcl:allowed-reifier, 1, 1).
+
+# ASSOCIATION ROLE CONSTRAINT
+tmcl:association-role-constraint ako tmcl:constraint;
+  - "Association role constraint";
+  has-occurrence(tmcl:card-min, 0, 1);
+  has-occurrence(tmcl:card-max, 0, 1);
+  plays-role(tmcl:constrains, tmcl:constrained-statement, 1, 1);
+  plays-role(tmcl:constrains, tmcl:constrained-role, 1, 1).
+  
+  
+  # ROLE COMBINATION CONSTRAINT
+tmcl:role-combination-constraint ako tmcl:constraint;
+  - "Role combination constraint";
+  plays-role(tmcl:constrains, tmcl:constrained-statement, 1, 1);
+  plays-role(tmcl:constrains, tmcl:constrained-role, 1, 1);
+  plays-role(tmcl:constrains, tmcl:constrained-topic-type, 1, 1);
+  plays-role(tmcl:constrains, tmcl:other-constrained-role, 1, 1);
+  plays-role(tmcl:constrains, tmcl:other-constrained-topic-type, 1, 1).
+
+# OCCURRENCE DATATYPE CONSTRAINT
+tmcl:occurrence-datatype-constraint ako tmcl:constraint;
+  - "Occurrence datatype constraint";
+  has-occurrence(tmcl:datatype, 1, 1);
+  plays-role(tmcl:constrains, tmcl:constrained-statement, 1, 1).
+
+tmcl:datatype isa tmcl:occurrence-type;
+  - "Datatype";
+  has-datatype(xsd:anyURI).
+  
+  # UNIQUE VALUE CONSTRAINT
+tmcl:unique-occurrence-constraint ako tmcl:constraint;
+  - "Unique occurrence constraint";
+  plays-role(tmcl:constrains, tmcl:constrained-statement, 1, 1).
+
+# REGULAR EXPRESSION CONSTRAINT
+tmcl:regular-expression-constraint ako tmcl:constraint;
+  - "Regular expression constraint";
+  plays-role(tmcl:constrains, tmcl:constrained-statement, 1, 1).
+ 
+ # CONSTRAINED TOPIC TYPE
+tmcl:constrained-topic-type isa tmcl:association-type;
+  - "Constrained topic type";
+  has-role(tmcl:constrains, 1, 1);
+  has-role(tmcl:constrained, 1, 1).
+
+tmcl:constrains isa tmcl:role-type.
+tmcl:constrained isa tmcl:role-type.
+
+# CONSTRAINED STATEMENT
+tmcl:constrained-statement isa tmcl:association-type;
+  - "Constrained statement";
+  has-role(tmcl:constrains, 1, 1);
+  has-role(tmcl:constrained, 1, 1);
+  role-combination(tmcl:constrains, tmcl:occurrence-datatype-constraint,
+                   tmcl:constrained, tmcl:occurrence-type);
+  role-combination(tmcl:constrains, tmcl:association-role-constraint,
+                   tmcl:constrained, tmcl:association-type);
+  role-combination(tmcl:constrains, tmcl:other-role-constraint,
+                   tmcl:constrained, tmcl:association-type);
+                   
+  role-combination(tmcl:constrains, tmcl:unique-value-constraint,
+                   tmcl:constrained, tmcl:name-type);
+  role-combination(tmcl:constrains, tmcl:unique-value-constraint,
+                   tmcl:constrained, tmcl:occurrence-type);
+
+  role-combination(tmcl:constrains, tmcl:regular-expression-constraint,
+                   tmcl:constrained, tmcl:name-type);
+  role-combination(tmcl:constrains, tmcl:regular-expression-constraint,
+                   tmcl:constrained, tmcl:occurrence-type);
+
+  role-combination(tmcl:constrains, tmcl:scope-constraint,
+                   tmcl:constrained, tmcl:name-type);
+  role-combination(tmcl:constrains, tmcl:scope-constraint,
+                   tmcl:constrained, tmcl:occurrence-type);
+  role-combination(tmcl:constrains, tmcl:scope-constraint,
+                   tmcl:constrained, tmcl:association-type);
+
+  role-combination(tmcl:constrains, tmcl:reifier-constraint,
+                   tmcl:constrained, tmcl:name-type);
+  role-combination(tmcl:constrains, tmcl:reifier-constraint,
+                   tmcl:constrained, tmcl:occurrence-type);
+  role-combination(tmcl:constrains, tmcl:reifier-constraint,
+                   tmcl:constrained, tmcl:association-type);
+
+  role-combination(tmcl:constrains, tmcl:topic-reifies-constraint,
+                   tmcl:constrained, tmcl:name-type);
+  role-combination(tmcl:constrains, tmcl:topic-reifies-constraint,
+                   tmcl:constrained, tmcl:occurrence-type);
+  role-combination(tmcl:constrains, tmcl:topic-reifies-constraint,
+                   tmcl:constrained, tmcl:association-type).
+                   
+# CONSTRAINED ROLE
+tmcl:constrained-role isa tmcl:association-type;
+  - "Constrained role";
+  has-role(tmcl:constrains, 1, 1);
+  has-role(tmcl:constrained, 1, 1).
+
+# OVERLAPS
+tmcl:overlaps isa tmcl:association-type;
+  - "Overlaps";
+  has-role(tmcl:allows, 1, 1);
+  has-role(tmcl:allowed, 1, 1).
+
+tmcl:allows isa tmcl:role-type.
+tmcl:allowed isa tmcl:role-type.
+
+# OTHER CONSTRAINED ROLE
+tmcl:other-constrained-role isa tmcl:association-type;
+  - "Other constrained role";
+  has-role(tmcl:constrains, 1, 1);
+  has-role(tmcl:constrained, 1, 1).
+
+# OTHER CONSTRAINED TOPIC TYPE
+tmcl:other-constrained-topic-type isa tmcl:association-type;
+  - "Other constrained topic type";
+  has-role(tmcl:constrains, 1, 1);
+  has-role(tmcl:constrained, 1, 1).
+
+# ALLOWED SCOPE
+tmcl:allowed-scope isa tmcl:association-type;
+  - "Allowed scope";
+  has-role(tmcl:allows, 1, 1);
+  has-role(tmcl:allowed, 1, 1).
+
+# ALLOWED REIFIER
+tmcl:allowed-reifier isa tmcl:association-type;
+  - "Allowed reifier";
+  has-role(tmcl:allows, 1, 1);
+  has-role(tmcl:allowed, 1, 1).
+
+# USER-DEFINED CONSTRAINT
+tmcl:user-defined-constraint ako tmcl:constraint;
+  - "User-defined constraint";
+  is-abstract();
+  has-occurrence(tmcl:validation-expression, 1, 1).
+
+tmcl:validation-expression isa tmcl:occurrence-type;
+  - "Validation expression";
+  has-datatype(xsd:string).
+                     
+# DENIAL CONSTRAINT
+tmcl:denial-constraint ako tmcl:user-defined-constraint;
+  - "Denial constraint".
+
+# REQUIREMENT CONSTRAINT
+tmcl:requirement-constraint ako tmcl:user-defined-constraint;
+  - "Requirement constraint".
+
+# SCHEMA
+tmcl:schema isa tmcl:topic-type;
+  - "TMCL schema";
+  has-occurrence(tmcl:version, 0, 1);
+  has-occurrence(tmcl:description, 0, 1);
+  has-occurrence(tmcl:comment, 0, "*" ^^ctm:integer);
+  has-occurrence(tmcl:see-also, 0, "*" ^^ctm:integer);
+  plays-role(tmcl:container, tmcl:belongs-to, 0, "*" ^^ctm:integer).
+
+tmcl:belongs-to isa tmcl:association-type;
+  - "Belongs to";
+  - "Contains" @tmcl:container;
+  has-role(tmcl:containee, 1, 1);
+  has-role(tmcl:container, 1, 1).
+
+# VERSION
+tmcl:version isa tmcl:occurrence-type;
+  - "Version";
+  has-datatype(xsd:string).
+
+# DESCRIPTION
+tmcl:description isa tmcl:occurrence-type;
+  - "Description";
+  has-datatype(xsd:string).
+
+# COMMENT
+tmcl:comment isa tmcl:occurrence-type;
+  - "Comment";
+  has-datatype(xsd:string).
+
+# SEE-ALSO
+tmcl:see-also isa tmcl:occurrence-type;
+  - "See also";
+  has-datatype(xsd:anyURI).
+
+

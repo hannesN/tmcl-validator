@@ -1,0 +1,46 @@
+%encoding "utf-8"
+%version 1.0
+
+# --[ Prefixes ]--------------------------------------------------------------------------------------
+
+%prefix tmcl <http://psi.topicmaps.org/tmcl/>
+%prefix tmdm <http://psi.topicmaps.org/iso13250/model/>
+
+%prefix validator <http://tmclvalidator.topicmapslab.de/>
+
+
+# --[ topic types ]-----------------------------------------------------------------------------------
+
+validator:person isa tmcl:topic-type.
+
+# --[ role types ]------------------------------------------------------------------------------------
+
+validator:role1 isa tmcl:role-type.
+validator:role2 isa tmcl:role-type.
+
+# --[ instances ]-------------------------------------------------------------------------------------
+
+validator:reifier_01 isa validator:reifier.
+validator:reifier_02 isa validator:reifier.
+validator:reifier_03 isa validator:reifier.
+validator:reifier_04 isa validator:reifier.
+validator:reifier_05 isa validator:reifier.
+validator:reifier_06 isa validator:reifier.
+
+validator:person_01 isa validator:person;
+	- validator:must_have_name: "must have name" ~validator:reifier_01;
+	- validator:cannot_have_name: "cannot have name";
+	- validator:may_have_name: "may have name 1";
+	- validator:may_have_name: "may have name 2" ~validator:reifier_02;
+	validator:must_have_occurrence: "must have occurrence" ~validator:reifier_03;
+	validator:cannot_have_occurrence: "cannot have occurrence";
+	validator:may_have_occurrence: "may have occurrence 1";
+	validator:may_have_occurrence: "may have occurrence 2"  ~validator:reifier_04 .	
+
+# --[ associations ]----------------------------------------------------------------------------------
+
+validator:must_have_association(validator:role1 : validator:player1, validator:role2 : validator:player2) ~validator:reifier_05
+validator:cannot_have_association(validator:role1 : validator:player1, validator:role2 : validator:player2)
+validator:may_have_association(validator:role1 : validator:player1, validator:role2 : validator:player2)
+validator:may_have_association(validator:role1 : validator:player1, validator:role2 : validator:player2) ~validator:reifier_06	
+	

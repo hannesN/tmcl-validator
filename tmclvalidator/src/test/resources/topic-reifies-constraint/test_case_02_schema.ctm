@@ -1,0 +1,50 @@
+%encoding "utf-8"
+%version 1.0
+
+# --[ Prefixes ]--------------------------------------------------------------------------------------
+
+%prefix tmcl <http://psi.topicmaps.org/tmcl/>
+%prefix tmdm <http://psi.topicmaps.org/iso13250/model/>
+
+%prefix validator <http://tmclvalidator.topicmapslab.de/>
+
+# --[ SCHEMA ]----------------------------------------------------------------------------------------
+
+validator:cannot_reifier isa tmcl:topic-type;
+	cannot-reify().
+	
+validator:occurrence_must_reifier isa tmcl:topic-type;
+	must-reify(validator:occurrence_type_1).
+	
+validator:occurrence_may_reifier isa tmcl:topic-type;
+	may-reify(validator:occurrence_type_2).
+	
+validator:name_must_reifier isa tmcl:topic-type;
+	must-reify(validator:name_type_1).
+	
+validator:name_may_reifier isa tmcl:topic-type;
+	may-reify(validator:name_type_2).
+	
+validator:association_must_reifier isa tmcl:topic-type;
+	must-reify(validator:association_type_1).
+	
+validator:association_may_reifier isa tmcl:topic-type;
+	may-reify(validator:association_type_2).		
+	
+validator:occurrence_type_1 isa tmcl:occurrence-type.
+validator:occurrence_type_2 isa tmcl:occurrence-type.	
+
+validator:name_type_1 isa tmcl:name-type.
+validator:name_type_2 isa tmcl:name-type.	
+
+validator:association_type_1 isa tmcl:association-type.
+validator:association_type_2 isa tmcl:association-type.
+
+validator:role_type_1 isa tmcl:role-type.
+
+validator:topic_type_1 isa tmcl:topic-type.
+
+
+
+
+

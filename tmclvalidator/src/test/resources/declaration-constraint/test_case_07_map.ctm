@@ -1,0 +1,22 @@
+%encoding "utf-8"
+%version 1.0
+
+# --[ Prefixes ]--------------------------------------------------------------------------------------
+
+%prefix tmcl <http://psi.topicmaps.org/tmcl/>
+%prefix tmdm <http://psi.topicmaps.org/iso13250/model/>
+
+%prefix validator <http://tmclvalidator.topicmapslab.de/>
+ 
+# --[ instances ]-------------------------------------------------------------------------------------
+
+validator:instance isa validator:type_2;
+	- validator:name_2: "Name 2";
+	validator:occurrence_2: "Occurrence 2".
+
+# --[ associations ]----------------------------------------------------------------------------------
+
+validator:association_2(validator:role_2 : validator:test1, validator:role_2 : validator:test2)
+
+	
+	

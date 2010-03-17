@@ -1,0 +1,34 @@
+%encoding "utf-8"
+%version 1.0
+
+# --[ Prefixes ]--------------------------------------------------------------------------------------
+
+%prefix tmcl <http://psi.topicmaps.org/tmcl/>
+%prefix tmdm <http://psi.topicmaps.org/iso13250/model/>
+
+%prefix validator <http://tmclvalidator.topicmapslab.de/>
+
+# --[ association types ]-----------------------------------------------------------------------------
+
+validator:lives_in isa tmcl:association-type;
+	has-scope(validator:timeframe, 1, 1).
+
+# --[ role types ]------------------------------------------------------------------------------------
+
+# --[ occurrence types ]------------------------------------------------------------------------------   
+
+validator:description isa tmcl:occurrence-type;
+	has-scope(validator:language, 1, 1).
+
+# --[ name types ]------------------------------------------------------------------------------------	
+
+validator:familie_name isa tmcl:name-type;
+	has-scope(validator:parent, 1, 1).
+
+# --[ topic types ]-----------------------------------------------------------------------------------
+
+validator:timeframe isa tmcl:topic-type .
+validator:language isa tmcl:topic-type .
+validator:parent isa tmcl:topic-type .
+
+

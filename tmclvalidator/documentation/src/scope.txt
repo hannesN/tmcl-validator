@@ -1,0 +1,4 @@
+=== Scope
+   
+The Topic Maps Constraint Language (TMCL, ISO 19756) is a language defined to specify constraints and schemas for topic maps. The TMCL validator validates a given topic map against a schema compatible to the current draft (2009-11-19, http://www.isotopicmaps.org/tmcl/tmcl.html).
+    

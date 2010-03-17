@@ -1,0 +1,34 @@
+=== Getting started
+
+You can check out the validator from code.google.com using the following command:
+----
+hg clone https://tmcl-validator.googlecode.com/hg/ tmcl-validator
+----
+
+For using the TMCL validator you have to have some dependent libraries within your search path. 
+The following table shows a list of those libraries. You could also use Maven to resolve those dependencies.
+
+.Table 1: dependencies of the TMCL validator 
+[options="header"]
+|=============================
+|library |description |scope
+|tmapi 2.0a2 |TMAPI interface |compile
+|slf4j-api 1.5.8 |Java logging library |compile
+|junit 4.7 |Java unit test framework |test
+|TMCL loader |Loader which allows reading CTM file which uses include statements |test
+|semagia-mio 0.9.5 |Semagia IO libraries |test
+|semagia-mio-xtm 0.9.4 |XTM extension of Semagio IO |test
+|ontopia... |Ontopio Topic Map Engine |test
+|=============================
+
+The TMCL loader which is used to running the tests has some addition dependencies:
+
+.Table 2: dependencies of the TMCL Loader 
+[options="header"]
+|=============================
+|library |description
+|tmapi 2.0a2 |TMAPI interface
+|tmapix-io 0.3.0 |TMAPI extension for serialisation
+|tmapi 2.0a2 |TMAPI interface
+|semagia-mio-ctm |CTM extension of Semagio IO 
+|=============================

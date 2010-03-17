@@ -1,0 +1,26 @@
+%encoding "utf-8"
+%version 1.0
+
+# --[ Prefixes ]--------------------------------------------------------------------------------------
+
+%prefix tmcl <http://psi.topicmaps.org/tmcl/>
+%prefix tmdm <http://psi.topicmaps.org/iso13250/model/>
+
+%prefix validator <http://tmclvalidator.topicmapslab.de/>
+
+# --[ association types ]-----------------------------------------------------------------------------
+
+validator:works-for isa tmcl:association-type;
+	- "works for";
+	has-role(validator:employee, 1, 1);
+  	has-role(validator:employer, 1, 1).
+
+# --[ role types ]------------------------------------------------------------------------------------
+
+validator:employee isa tmcl:role-type;
+	- "Employee".
+	
+validator:employer isa tmcl:role-type;
+	- "Employer". 	    
+    
+    

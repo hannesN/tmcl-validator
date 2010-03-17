@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="tmclvalidator"
+    nsURI="http://tmclvalidator/1.0" nsPrefix="tmclvalidator">
+  <eClassifiers xsi:type="ecore:EClass" name="Construct" interface="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TopicMap"/>
+  <eSubpackages name="de.topicmapslab.tmclvalidator">
+    <eClassifiers xsi:type="ecore:EClass" name="IConstraintValidator" interface="true">
+      <eOperations name="validate" lowerBound="1" eType="#//de.topicmapslab.tmclvalidator/ValidationResult">
+        <eParameters name="topicMap"/>
+      </eOperations>
+      <eOperations name="getId"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="" eType="#//de.topicmapslab.tmclvalidator/IConstraintValidatorFactory"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="created from" eType="#//de.topicmapslab.tmclvalidator/IConstraintValidatorFactory"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ValidationResult">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" lowerBound="1"
+          eType="#//de.topicmapslab.tmclvalidator/IConstraintValidator"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="tmConstructs" lowerBound="1"
+          upperBound="-1"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TMCLValidator">
+      <eOperations name="TMCLValidator">
+        <eParameters name="schema" eType="#//TopicMap"/>
+      </eOperations>
+      <eOperations name="TMCLValidator">
+        <eParameters name="factory" eType="#//de.topicmapslab.tmclvalidator/IConstraintValidatorFactory"/>
+        <eParameters name="schema" eType="#//TopicMap"/>
+      </eOperations>
+      <eOperations name="validate">
+        <eParameters name="TopicMapConstruct" eType="#//Construct"/>
+      </eOperations>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fac" lowerBound="1" eType="#//de.topicmapslab.tmclvalidator/IConstraintValidatorFactory"
+          containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="EReference0" eType="#//de.topicmapslab.tmclvalidator/IConstraintValidator"
+          containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constraints" upperBound="-1"
+          eType="#//de.topicmapslab.tmclvalidator/IConstraintValidator" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TMQLValidator" eSuperTypes="#//de.topicmapslab.tmclvalidator/IConstraintValidator">
+      <eOperations name="TMQLValidator">
+        <eParameters name="query" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eOperations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="query"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="IConstraintValidatorFactory" interface="true">
+      <eOperations name="getConstraints" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EEList">
+        <eParameters name="schema" eType="#//TopicMap"/>
+      </eOperations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TMQLFactory" eSuperTypes="#//de.topicmapslab.tmclvalidator/IConstraintValidatorFactory"/>
+  </eSubpackages>
+</ecore:EPackage>

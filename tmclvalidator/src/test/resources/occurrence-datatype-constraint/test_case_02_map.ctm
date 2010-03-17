@@ -1,0 +1,27 @@
+%encoding "utf-8"
+%version 1.0
+
+# --[ Prefixes ]--------------------------------------------------------------------------------------
+
+%prefix tmcl <http://psi.topicmaps.org/tmcl/>
+%prefix tmdm <http://psi.topicmaps.org/iso13250/model/>
+
+%prefix validator <http://tmclvalidator.topicmapslab.de/>
+
+# --[ topic types ]-----------------------------------------------------------------------------------
+
+validator:city isa tmcl:topic-type;
+	- "City" .
+
+# --[ instances ]-------------------------------------------------------------------------------------
+
+validator:leipzig isa validator:city;
+	- "Leipzig";
+	validator:population: "515459" ^^xsd:float;
+	validator:website: "http://www.leipzig.de" ^^xsd:anyURI .		
+
+# --[ associations ]----------------------------------------------------------------------------------
+
+
+	
+	

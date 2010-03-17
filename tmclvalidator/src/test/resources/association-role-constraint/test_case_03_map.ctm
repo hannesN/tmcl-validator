@@ -1,0 +1,36 @@
+%encoding "utf-8"
+%version 1.0
+
+# --[ Prefixes ]--------------------------------------------------------------------------------------
+
+%prefix tmcl <http://psi.topicmaps.org/tmcl/>
+%prefix tmdm <http://psi.topicmaps.org/iso13250/model/>
+
+%prefix validator <http://tmclvalidator.topicmapslab.de/>
+
+# --[ topic types ]-----------------------------------------------------------------------------------
+
+validator:person isa tmcl:topic-type;
+	- "Person" .
+    
+# --[ instances ]-------------------------------------------------------------------------------------
+
+validator:employee_01 isa validator:person;
+	- "Employee 01" .
+	
+validator:employee_02 isa validator:person;
+	- "Employee 02" .	
+	
+validator:employer_01 isa validator:person;
+	- "Employer 01" .
+	
+validator:employer_02 isa validator:person;
+	- "Employer 02" .	
+
+# --[ associations ]----------------------------------------------------------------------------------
+
+validator:works-for(validator:employee : validator:employee_01, validator:employer : validator:employer_01)
+validator:works-for(validator:employee : validator:employee_01, validator:employee : validator:employee_02, validator:employer : validator:employer_01)
+validator:works-for(validator:employee : validator:employee_01, validator:employer : validator:employer_01, validator:employer : validator:employer_02)
+	
+	

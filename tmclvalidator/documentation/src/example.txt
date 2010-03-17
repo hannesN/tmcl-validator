@@ -1,0 +1,79 @@
+=== Example
+
+----
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+
+import org.tmapi.core.Construct;
+import org.tmapi.core.FactoryConfigurationException;
+import org.tmapi.core.TMAPIException;
+import org.tmapi.core.TopicMap;
+import org.tmapi.core.TopicMapSystem;
+import org.tmapi.core.TopicMapSystemFactory;
+import org.tmapix.io.CTMTopicMapReader;
+
+import de.topicmapslab.tmclvalidator.TMCLValidator;
+import de.topicmapslab.tmclvalidator.TMCLValidatorException;
+import de.topicmapslab.tmclvalidator.ValidationResult;
+
+public class Excample {
+
+	public void validationExample(){
+
+        try {
+        	
+        	// create factor and system
+        	
+        	TopicMapSystemFactory factory = TopicMapSystemFactory.newInstance();
+        	TopicMapSystem system = factory.newTopicMapSystem();
+	        
+        	// read a CTM topic map and schema
+         	
+        	TopicMap map = system.createTopicMap("test:test");
+        	TopicMap schema = system.createTopicMap("test:schema");
+        	
+        	File fmap = new File("map.ctm");
+        	File fschema = new File("schema.ctm");
+        	
+        	CTMTopicMapReader reader = new CTMTopicMapReader(map, fmap);
+    		reader.read();
+    		
+    		reader = new CTMTopicMapReader(schema, fschema);
+    		
+    		// validate
+    		
+    		TMCLValidator validator = new TMCLValidator(schema); 
+    		Map<Construct, Set<ValidationResult>> invalidConstructs = validator.validate(map);
+    		
+    		// plot result
+    		
+    		for(Map.Entry<Construct, Set<ValidationResult>> invalidConstruct:invalidConstructs.entrySet()){
+    			
+    			System.out.println("Invalid construct " + invalidConstruct.getKey() + ":");
+    			
+    			for(ValidationResult result:invalidConstruct.getValue()){
+    				
+    				System.out.println("Constraint " + result.getConstraintId() + " violated:");
+    				System.out.println(result.getMessage());
+    				
+    			}
+    			
+    		}
+        	
+	        
+        } catch (FactoryConfigurationException e) {
+	        e.printStackTrace();
+        } catch (TMAPIException e) {
+	        e.printStackTrace();
+        } catch (IOException e) {
+	        e.printStackTrace();
+        } catch (TMCLValidatorException e) {
+	        e.printStackTrace();
+        }
+        
+	}
+
+}
+----

@@ -1,0 +1,33 @@
+%encoding "utf-8"
+%version 1.0
+
+# --[ Prefixes ]--------------------------------------------------------------------------------------
+
+%prefix tmcl <http://psi.topicmaps.org/tmcl/>
+%prefix tmdm <http://psi.topicmaps.org/iso13250/model/>
+
+%prefix validator <http://tmclvalidator.topicmapslab.de/>
+
+# --[ topic types ]-----------------------------------------------------------------------------------
+
+validator:person isa tmcl:topic-type;
+	- "Person" .
+
+# --[ name types ]------------------------------------------------------------------------------------
+
+validator:vorname isa tmcl:name-type.
+validator:nachname isa tmcl:name-type.
+
+# --[ instances ]-------------------------------------------------------------------------------------
+
+validator:person_01 isa validator:person;
+	- validator:vorname: "Test";
+	- validator:nachname: "Person";
+	- validator:username: "test person";
+	validator:email: "person_01@test.t" .		
+
+# --[ associations ]----------------------------------------------------------------------------------
+
+
+	
+	

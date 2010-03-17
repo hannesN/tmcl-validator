@@ -1,0 +1,197 @@
+#########################################################################
+# TMCL - Topic Maps Constraint Language
+# This file defines the set of templates defined in the TMCL standard
+# This document is located at http://www.isotopicmaps.org/tmcl/templates.ctm 
+# and is normative.
+# Draft version of 2009-07-15.
+#########################################################################
+
+# prefix declarations
+#%prefix tmcl http://psi.topicmaps.org/tmcl/
+#%prefix tmdm http://psi.topicmaps.org/iso13250/model/
+
+
+# Overlap Declaration
+def overlaps($tt1, $tt2)
+  ?c isa tmcl:overlap-declaration.
+  tmcl:overlaps(tmcl:allows : ?c, tmcl:allowed : $tt1)
+  tmcl:overlaps(tmcl:allows : ?c, tmcl:allowed : $tt2)
+end
+
+# Abstract Topic Type Constraint
+def is-abstract($tt)
+  ?c isa tmcl:abstract-constraint.
+  tmcl:constrained-topic-type(tmcl:constrains : ?c, tmcl:constrained : $tt)
+end
+
+# Subject Identifier Constraint
+def has-subject-identifier($tt, $min, $max, $regexp)
+  ?c isa tmcl:subject-identifier-constraint;
+    tmcl:card-min: $min;
+    tmcl:card-max: $max;
+    tmcl:regexp: $regexp.
+  tmcl:constrained-topic-type(tmcl:constrains : ?c, tmcl:constrained : $tt)
+end
+
+# Subject Locator Constraint
+def has-subject-locator($tt, $min, $max, $regexp)
+  ?c isa tmcl:subject-locator-constraint;
+    tmcl:card-min: $min;
+    tmcl:card-max: $max;
+    tmcl:regexp: $regexp.
+  tmcl:constrained-topic-type(tmcl:constrains : ?c, tmcl:constrained : $tt)
+end
+
+# Topic Name Constraint
+def has-name($tt, $nt, $min, $max)
+  ?c isa tmcl:topic-name-constraint;
+    tmcl:card-min: $min;
+    tmcl:card-max: $max.
+  
+  tmcl:constrained-topic-type(tmcl:constrains : ?c, tmcl:constrained : $tt)  
+  tmcl:constrained-statement(tmcl:constrains : ?c, tmcl:constrained : $nt)
+end
+
+# Topic Occurrence Constraint
+def has-occurrence($tt, $ot, $min, $max)
+  ?c isa tmcl:topic-occurrence-constraint;
+    tmcl:card-min: $min;
+    tmcl:card-max: $max.
+  
+  tmcl:constrained-topic-type(tmcl:constrains : ?c, tmcl:constrained : $tt)  
+  tmcl:constrained-statement(tmcl:constrains : ?c, tmcl:constrained : $ot)
+end
+
+# Topic Role Constraint
+def plays-role($tt, $rt, $at, $min, $max)
+  ?c isa tmcl:topic-role-constraint;
+    tmcl:card-min: $min;
+    tmcl:card-max: $max.
+  
+  tmcl:constrained-topic-type(tmcl:constrains : ?c, tmcl:constrained : $tt)  
+  tmcl:constrained-statement(tmcl:constrains : ?c, tmcl:constrained : $at)
+  tmcl:constrained-role(tmcl:constrains : ?c, tmcl:constrained : $rt)
+end
+
+# Scope Constraint
+def has-scope($st, $tt, $min, $max)
+  c isa tmcl:scope-constraint;
+    tmcl:card-min: $min;
+    tmcl:card-max: $max.
+  
+  tmcl:constrained-statement(tmcl:constrains : c, tmcl:constrained : $st)
+  tmcl:allowed-scope(tmcl:allows : c, tmcl:allowed : $tt)
+end
+
+# Reifier Constraint
+def must-have-reifier($st, $tt)
+  ?c isa tmcl:reifier-constraint;
+    tmcl:card-min: 1;
+    tmcl:card-max: 1.
+  tmcl:constrained-statement(tmcl:constrains: ?c, tmcl:constrained: $st)
+  tmcl:allowed-reifier(tmcl:allows: ?c, tmcl:allowed: $tt)
+end
+
+def cannot-have-reifier($st)
+  ?c isa tmcl:reifier-constraint;
+    tmcl:card-min: 0;
+    tmcl:card-max: 0.
+  tmcl:constrained-statement(tmcl:constrains: ?c, tmcl:constrained: $st)
+  tmcl:allowed-reifier(tmcl:allows: ?c, tmcl:allowed: tmdm:subject)
+end
+
+def may-have-reifier($st, $tt)
+  ?c isa tmcl:reifier-constraint;
+    tmcl:card-min: 0;
+    tmcl:card-max: 1.
+  tmcl:constrained-statement(tmcl:constrains: ?c, tmcl:constrained: $st)
+  tmcl:allowed-reifier(tmcl:allows: ?c, tmcl:allowed: $tt)
+end
+
+# Topic Reifies Constraint
+def must-reify($tt, $st)
+  ?c isa tmcl:topic-reifies-constraint;
+    tmcl:card-min: 1;
+    tmcl:card-max: 1.
+  tmcl:constrained-topic-type(tmcl:constrains: ?c, tmcl:constrained: $tt)
+  tmcl:constrained-statement(tmcl:constrains: ?c, tmcl:constrained: $st)
+end
+
+def cannot-reify($tt)
+  ?c isa tmcl:topic-reifies-constraint;
+    tmcl:card-min: 0;
+    tmcl:card-max: 0.
+  tmcl:constrained-topic-type(tmcl:constrains: ?c, tmcl:constrained: $tt)
+end
+
+def may-reify($tt, $st)
+  ?c isa tmcl:topic-reifies-constraint;
+    tmcl:card-min: 0;
+    tmcl:card-max: 1.
+  tmcl:constrained-topic-type(tmcl:constrains: ?c, tmcl:constrained: $tt)
+  tmcl:constrained-statement(tmcl:constrains: ?c, tmcl:constrained: $st)
+end
+
+# Association Role Constraint
+def has-role($at, $rt, $min, $max)
+  ?c isa tmcl:association-role-constraint;
+    tmcl:card-min: $min;
+    tmcl:card-max: $max.
+  
+  tmcl:constrained-statement(tmcl:constrains : ?c, tmcl:constrained : $at)
+  tmcl:constrained-role(tmcl:constrains : ?c, tmcl:constrained : $rt)
+end
+
+# Role Combination Constraint
+def role-combination($at, $rt, $tt, $ort, $ott)
+  ?c isa tmcl:role-combination-constraint.
+  tmcl:constrained-statement(tmcl:constrains: ?c, tmcl:constrained: $at)
+  tmcl:constrained-role(tmcl:constrains: ?c, tmcl:constrained: $rt)
+  tmcl:constrained-topic-type(tmcl:constrains: ?c, tmcl:constrained: $tt)
+  tmcl:other-constrained-role(tmcl:constrains: ?c, tmcl:constrained: $ort)
+  tmcl:other-constrained-topic-type(tmcl:constrains: ?c, tmcl:constrained: $ott)
+end
+
+# Occurrence Data Type Constraint
+def has-datatype($ot, $dt)
+  ?c isa tmcl:occurrence-datatype-constraint;
+    tmcl:datatype: $dt.
+  tmcl:constrained-statement(tmcl:constrains : ?c, tmcl:constrained : $ot)
+end
+
+# Unique Value Constraint
+def is-unique($st)
+  ?c isa tmcl:unique-value-constraint.
+  tmcl:constrained-statement(tmcl:constrains : ?c, tmcl:constrained : $st)
+end
+
+# Regular Expression Constraint
+def matches-regexp($st, $regexp)
+  ?c isa tmcl:regular-expression-constraint;
+    tmcl:regexp: $regexp.
+  
+  tmcl:constrained-statement(tmcl:constrains: ?c, tmcl:constrained: $st)
+end
+
+# Additional TMCL Templates
+def binary-association($at, $rt1, $rt2)
+  $at isa tmcl:association-type;
+    has-role($rt1, 1, 1);
+    has-role($rt2, 1, 1).
+
+  $rt1 isa tmcl:role-type.
+  $rt2 isa tmcl:role-type.
+end
+
+# Additional TMCL Templates
+def symmetric-association($at, $rt)
+  $at isa tmcl:association-type;
+    has-role($rt, 2, 2).
+
+  $rt isa tmcl:role-type.
+end
+
+# The Schema Topic
+def belongs-to($construct, $schema)
+  tmcl:belongs-to-schema(tmcl:container: $schema, tmcl:containee: $construct)
+end
