@@ -1,4 +1,4 @@
-=== Getting started
+== Getting started
 
 You can check out the validator from code.google.com using the following command:
 ----
@@ -18,7 +18,7 @@ The following table shows a list of those libraries. You could also use Maven to
 |TMCL loader |Loader which allows reading CTM file which uses include statements |test
 |semagia-mio 0.9.5 |Semagia IO libraries |test
 |semagia-mio-xtm 0.9.4 |XTM extension of Semagio IO |test
-|ontopia... |Ontopio Topic Map Engine |test
+|latest ontopia build |Ontopio Topic Map Engine |test
 |=============================
 
 The TMCL loader which is used to running the tests has some addition dependencies:

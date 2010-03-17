@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.4.5" />
-<title></title>
+<title>TMCL Validator documentation</title>
 <style type="text/css">
 /* Debug borders */
 p, li, dt, dd, div, pre, h1, h2, h3, h4, h5, h6 {
@@ -458,16 +458,18 @@ function generateToc(toclevels) {
 </head>
 <body>
 <div id="header">
+<h1>TMCL Validator documentation</h1>
 <div id="toc">
   <div id="toctitle">Table of Contents</div>
   <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
 </div>
 </div>
-<h2 id="_tmcl_validator_documentation">1. TMCL Validator documentation</h2>
+<h2 id="_scope">1. Scope</h2>
 <div class="sectionbody">
-<h3 id="_scope">1.1. Scope</h3><div style="clear:left"></div>
 <div class="paragraph"><p>The Topic Maps Constraint Language (TMCL, ISO 19756) is a language defined to specify constraints and schemas for topic maps. The TMCL validator validates a given topic map against a schema compatible to the current draft (2009-11-19, <a href="http://www.isotopicmaps.org/tmcl/tmcl.html">http://www.isotopicmaps.org/tmcl/tmcl.html</a>).</p></div>
-<h3 id="_getting_started">1.2. Getting started</h3><div style="clear:left"></div>
+</div>
+<h2 id="_getting_started">2. Getting started</h2>
+<div class="sectionbody">
 <div class="paragraph"><p>You can check out the validator from code.google.com using the following command:</p></div>
 <div class="listingblock">
 <div class="content">
@@ -523,7 +525,7 @@ cellspacing="0" cellpadding="4">
 <td align="left" valign="top"><p class="table">test</p></td>
 </tr>
 <tr>
-<td align="left" valign="top"><p class="table">ontopia&#8230;</p></td>
+<td align="left" valign="top"><p class="table">latest ontopia build</p></td>
 <td align="left" valign="top"><p class="table">Ontopio Topic Map Engine</p></td>
 <td align="left" valign="top"><p class="table">test</p></td>
 </tr>
@@ -565,7 +567,9 @@ cellspacing="0" cellpadding="4">
 </tbody>
 </table>
 </div>
-<h3 id="_functionality">1.3. Functionality</h3><div style="clear:left"></div>
+</div>
+<h2 id="_functionality">3. Functionality</h2>
+<div class="sectionbody">
 <div class="paragraph"><p>The main functionality is to validate a topic map against a topic map schema.</p></div>
 <div class="paragraph"><p><em>Note:</em> In the current implementation of the TMCL validator merges the topic map with the schema
 to increase the performance of the validation process as well as makes it easier to implement.
@@ -577,7 +581,9 @@ Afterwards just call the validate() method give the to be validated topic map as
 The method returns a map of invalid topic map constructs together with a set of results for each construct.
 A result consists of the constraint id, i.e the subject identifier of the violated TMCL constraint, and an error message.
 For each result, you can access the constraint id via getConstraintId() and the error message via getMessage().</p></div>
-<h3 id="_example">1.4. Example</h3><div style="clear:left"></div>
+</div>
+<h2 id="_example">4. Example</h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="content">
 <pre><tt>import java.io.File;
@@ -659,7 +665,7 @@ public class Excample {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2010-03-17 14:48:00 CEST
+Last updated 2010-03-17 17:11:34 CEST
 </div>
 </div>
 </body>

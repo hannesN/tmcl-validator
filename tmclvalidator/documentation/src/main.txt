@@ -1,4 +1,4 @@
-== TMCL Validator documentation
+= TMCL Validator documentation =
 
 include::scope.txt[]
 

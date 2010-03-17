@@ -1,4 +1,4 @@
-=== Functionality
+== Functionality
 
 The main functionality is to validate a topic map against a topic map schema.
 
