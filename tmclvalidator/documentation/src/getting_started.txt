@@ -32,3 +32,8 @@ The TMCL loader which is used to running the tests has some addition dependencie
 |tmapi 2.0a2 |TMAPI interface
 |semagia-mio-ctm |CTM extension of Semagio IO 
 |=============================
+
+The TMCL loader is only used for running the tests. It simply copies the TMCL Templates 
+(http://www.isotopicmaps.org/tmcl/templates.ctm) into the schema file before the reader is invoked.
+This is necessary since the used CTM Reader dosn't supports includes.
+
