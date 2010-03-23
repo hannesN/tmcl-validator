@@ -41,6 +41,7 @@ public class Excample {
     		reader.read();
     		
     		reader = new CTMTopicMapReader(schema, fschema);
+    		reader.read();
     		
     		// validate
     		
