@@ -1,3 +1,4 @@
-syntax: regexp
+syntax: glob
 
-target
+**/target
+**/*log
