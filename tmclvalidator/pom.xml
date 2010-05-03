@@ -3,7 +3,7 @@
   <groupId>de.topicmapslab</groupId>
   <artifactId>tmclvalidator</artifactId>
   <name>TMCL Validator</name>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
   <description>A library to validate Topic Maps using a specified TMCL schema.</description>
   <build>
 		<plugins>

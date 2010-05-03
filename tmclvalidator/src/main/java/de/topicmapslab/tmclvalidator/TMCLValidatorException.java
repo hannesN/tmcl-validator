@@ -13,6 +13,10 @@ public class TMCLValidatorException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Constructor
+     * @param message - The error message.
+     */
 	public TMCLValidatorException(String message) {
 	    super(message);
     }

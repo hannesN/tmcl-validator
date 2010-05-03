@@ -29,82 +29,65 @@ public class TMCLValidator {
 	private IConstraintValidatorFactory factory;
 	
 	/**
-	 * The used topic map schema.
-	 */
-	private final TopicMap schema;
-	
-	/**
 	 * Constructor for using the default validator factory.
-	 * @param schema - The topic maps schema.
 	 */
-	public TMCLValidator(TopicMap schema) {
-		this.schema = schema;
+	public TMCLValidator() {
 		factory = new TMAPIFactory(false);
 	}
 	
 	/**
 	 * Constructor for using the default validator factory.
-	 * @param schema - The topic maps schema.
 	 * @param useIdentifierInMessages - Flag to force the usage of full identifier in error messages instead of names.
 	 */
-	public TMCLValidator(TopicMap schema, boolean useIdentifierInMessages) {
-		this.schema = schema;
+	public TMCLValidator(boolean useIdentifierInMessages) { // TODO if one more parameter is necessary, create a property handling
 		factory = new TMAPIFactory(useIdentifierInMessages); 
 	}
 
 	/**
 	 * Constructor for using a different factory, e.g. TMQL
-	 * @param schema - The topic maps schema.
 	 * @param factory - The validator factory which should be used.
 	 */
-	public TMCLValidator(TopicMap schema, IConstraintValidatorFactory factory) {
-		this.schema = schema;
+	public TMCLValidator(IConstraintValidatorFactory factory) {
 		this.factory = factory;
 	}
-
-	/**
-	 * Method to executed the validation of an specific topic maps construct.
-	 * Note: For the moment, always the whole topic maps will be validated.
-	 * @param construct - The topic map construct which will be validated.
-	 * @return A set of invalid constructs and the corresponding constraint validator results. Returns an empty map if topic map is valid.
-	 * @throws TMAPIException 
-	 */
-	public Map<Construct, Set<ValidationResult>> validate(Construct construct) throws TMCLValidatorException, TMAPIException {
-
-		// create merged topic map
 	
-		TopicMap mergedTopicMap = merge(construct);
-
+	/**
+	 * Method to executed the validation of an topic maps against a schema.
+	 * @param topicMap - The topic map which is to be validated. Note: The topic map need to contain the schema information.
+	 * @return A set of invalid constructs and the corresponding constraint validator results. Returns an empty map if topic map is valid.
+	 * @throws TMAPIException
+	 */
+	public Map<Construct, Set<ValidationResult>> validate(TopicMap topicMap) throws TMCLValidatorException{
+		
 		// create result set
 		Map<Construct, Set<ValidationResult>> resultSet = new HashMap<Construct, Set<ValidationResult>>();
 		resultSet.clear();
 		
 		// get validators
-		Set<IConstraintValidator> validatorSet = factory.getConstraintValidators(this.schema);
-
+		Set<IConstraintValidator> validatorSet = factory.getConstraintValidators(topicMap);
+		
 		// call each validator
 		Iterator<IConstraintValidator> it = validatorSet.iterator();
-
+		
 		while (it.hasNext()) 
 		{
-			 it.next().validate(mergedTopicMap, resultSet);
+			 it.next().validate(topicMap, resultSet);
 		}
 		
 		return resultSet;
 	}
-
+	
 	/**
-	 * Merges the construct topic map with the schema.
-	 * @param construct - The to validating construct.
-	 * @return A merged topic map. 
+	 * Method to executed the validation of an topic maps against a schema.
+	 * @param topicMap - The topic map which is to be validated.
+	 * @param schema - The schema topic map. Note: This schema will be merge into the topic map unsing the mergeIn method of the used TMAPI implementation.	
+	 * @return A set of invalid constructs and the corresponding constraint validator results. Returns an empty map if topic map is valid.
+	 * @throws TMAPIException
 	 */
-	private TopicMap merge(Construct construct) {
+	public Map<Construct, Set<ValidationResult>> validate(TopicMap topicMap, TopicMap schema) throws TMCLValidatorException{
 		
-		TopicMap map = construct.getTopicMap();
-		
-		map.mergeIn(this.schema);
-
-		return map;
+		topicMap.mergeIn(schema);
+		return validate(topicMap);
 	}
 	
 }

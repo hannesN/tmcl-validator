@@ -20,9 +20,9 @@ public interface IConstraintValidator {
 
 	/**
 	 * Validates a topic map which is merged with the used schema.
-	 * @param mergedTopicMap - The merged topic map.
+	 * @param topicMap - The topic map containing the schema.
 	 * @param invalidConstructs - Reference to an result set which will be filled with invalid constructs.
 	 */
-	public void validate(TopicMap mergedTopicMap, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException;
+	public void validate(TopicMap topicMap, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException;
 	
 }

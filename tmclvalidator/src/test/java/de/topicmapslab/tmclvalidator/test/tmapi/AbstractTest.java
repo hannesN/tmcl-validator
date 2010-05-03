@@ -74,8 +74,8 @@ public abstract class AbstractTest {
 		if(testSchema == null) throw new Exception("Schema is null!");
 		if(testMap == null) throw new Exception("Topic map is null!");
 		
-		TMCLValidator validator = new TMCLValidator(testSchema); 
-		Map<Construct, Set<ValidationResult>> results = validator.validate(testMap);
+		TMCLValidator validator = new TMCLValidator(); 
+		Map<Construct, Set<ValidationResult>> results = validator.validate(testMap, testSchema);
 		
 		return results;
 	}

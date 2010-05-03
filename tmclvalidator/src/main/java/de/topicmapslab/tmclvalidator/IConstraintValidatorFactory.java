@@ -18,9 +18,9 @@ public interface IConstraintValidatorFactory {
 
 	/**
 	 * Returns a set of validators according to the topic map schema.
-	 * @param shema - The topic maps schema.
+	 * @param topicMap - The topic maps containing the schema.
 	 * @return Set of validator classes.
 	 */
-	public Set<IConstraintValidator> getConstraintValidators(TopicMap shema);
+	public Set<IConstraintValidator> getConstraintValidators(TopicMap topicMap);
 		
 }

@@ -30,7 +30,7 @@ public class TMAPIFactory implements IConstraintValidatorFactory {
 		this.useIdentifierInMessages = useIdentifierInMessages;
 	}
 	
-	public Set<IConstraintValidator> getConstraintValidators(TopicMap schema) {
+	public Set<IConstraintValidator> getConstraintValidators(TopicMap topicMap) {
 	    
 		// create empty set
 		Set<IConstraintValidator> constraints = new THashSet<IConstraintValidator>();
@@ -45,7 +45,7 @@ public class TMAPIFactory implements IConstraintValidatorFactory {
 		// get constraint validator depending on schema
 		for(int i=0;i<constraintIds.length;i++)
 		{
-			if(isConstraintUsed(schema, constraintIds[i])){
+			if(isConstraintUsed(topicMap, constraintIds[i])){
 				constraints.add(getValidator(constraintIds[i]));
 			}
 		}
@@ -55,13 +55,13 @@ public class TMAPIFactory implements IConstraintValidatorFactory {
 	
 	/**
 	 * Check the schema whether a specific constraint is used or not.
-	 * @param schema - The topic map schema.
+	 * @param topicMap - The topic map.
 	 * @param constraintId - The constraint ID which is to be checked.
 	 * @return True in case the constraint is used, otherwise false.
 	 */
-	private boolean isConstraintUsed(TopicMap schema, String constraintId) {
+	private boolean isConstraintUsed(TopicMap topicMap, String constraintId) {
 
-		Topic constraint_type = schema.getTopicBySubjectIdentifier(schema.createLocator(constraintId));
+		Topic constraint_type = topicMap.getTopicBySubjectIdentifier(topicMap.createLocator(constraintId));
 		
 		if(constraint_type != null) return true;
 		return false;
