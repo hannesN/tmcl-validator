@@ -89,6 +89,7 @@ public class TMAPIFactory implements IConstraintValidatorFactory {
 		if(constraintId == OCCURRENCE_DATA_TYPE_CONSTRAINT) return new OccurrenceDatatypeConstraintValidator(constraintId, this.useIdentifierInMessages);
 		if(constraintId == UNIQUE_VALUE_CONSTRAINT) return new UniqueValueConstraintValidator(constraintId, this.useIdentifierInMessages);
 		if(constraintId == REGULAR_EXPRESSION_CONSTRAINT) return new RegularExpressionConstraintValidator(constraintId, this.useIdentifierInMessages);
+		if(constraintId == VARIANT_NAME_CONSTRAINT) return new VariantNameConstraintValidator(constraintId, this.useIdentifierInMessages);
 		
 		
 		return null;
@@ -113,6 +114,7 @@ public class TMAPIFactory implements IConstraintValidatorFactory {
 	
 	private final String DECLARATION_CONSTRAINT = "http://psi.topicmaps.org/tmcl/declaration-constraint";
 	private final String OVERLAY_DECLARATION = "http://psi.topicmaps.org/tmcl/overlap-declaration";
+	private final String VARIANT_NAME_CONSTRAINT = "http://psi.topicmaps.org/tmcl/variant-name-constraint";
 	
 	// define an array of constraint ids
 	private final String[] constraintIds = { ABSTRACT_TOPIC_TYPE_CONSTRAINT,
@@ -129,7 +131,8 @@ public class TMAPIFactory implements IConstraintValidatorFactory {
 												ROLE_COMBINATION_CONSTRAINT,
 												OCCURRENCE_DATA_TYPE_CONSTRAINT,
 												UNIQUE_VALUE_CONSTRAINT,
-												REGULAR_EXPRESSION_CONSTRAINT };
+												REGULAR_EXPRESSION_CONSTRAINT,
+												VARIANT_NAME_CONSTRAINT};
 	
 
 }

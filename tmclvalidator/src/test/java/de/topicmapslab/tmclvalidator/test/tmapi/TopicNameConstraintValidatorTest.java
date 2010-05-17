@@ -21,6 +21,9 @@ public class TopicNameConstraintValidatorTest extends AbstractTest {
 	private static String testMapFile_03 = "./src/test/resources/topic-name-constraint/test_case_03_map.ctm";
 	private static String testSchemaFile_03 = "./src/test/resources/topic-name-constraint/test_case_03_schema.ctm";
 	
+	private static String testMapFile_04 = "./src/test/resources/topic-name-constraint/test_case_04_map.ctm";
+	private static String testSchemaFile_04 = "./src/test/resources/topic-name-constraint/test_case_04_schema.ctm";
+	
 	@Test
     public final void testCase01() throws Exception {
 
@@ -38,6 +41,13 @@ public class TopicNameConstraintValidatorTest extends AbstractTest {
     public final void testCase03() throws Exception {
 
 		checkForInvalidTopic(testMapFile_03, testSchemaFile_03, "http://tmclvalidator.topicmapslab.de/instance_1");
+    }
+	
+	@Test
+    public final void testCase04() throws Exception {
+
+		this.results = runValidator(testMapFile_04, testSchemaFile_04);
+		assertEquals(0, this.results.size());
     }
 	
 }

@@ -1,0 +1,21 @@
+%encoding "utf-8"
+%version 1.0
+
+# --[ Prefixes ]--------------------------------------------------------------------------------------
+
+%prefix tmcl <http://psi.topicmaps.org/tmcl/>
+%prefix tmdm <http://psi.topicmaps.org/iso13250/model/>
+
+%prefix validator <http://tmclvalidator.topicmapslab.de/>
+
+# --[ SCHEMA ]----------------------------------------------------------------------------------------
+
+validator:name_type_1 isa tmcl:name-type .
+
+validator:topic_type_1 isa tmcl:topic-type;
+	has-variant(validator:name_type_1, validator:theme_1, 1, 1).
+
+
+
+
+

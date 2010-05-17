@@ -44,6 +44,7 @@ import de.topicmapslab.tmclvalidator.tmapi.constraint.TopicOccurrenceConstraint;
 import de.topicmapslab.tmclvalidator.tmapi.constraint.TopicReifiesConstraint;
 import de.topicmapslab.tmclvalidator.tmapi.constraint.TopicRoleConstraint;
 import de.topicmapslab.tmclvalidator.tmapi.constraint.UniqueValueConstraint;
+import de.topicmapslab.tmclvalidator.tmapi.constraint.VariantNameConstraint;
 import de.topicmapslab.tmclvalidator.tmapi.utils.Utils;
 
 /**
@@ -78,6 +79,7 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 	private static final String OCCURRENCE_DATA_TYPE_CONSTRAINT = "http://psi.topicmaps.org/tmcl/occurrence-datatype-constraint";
 	private static final String UNIQUE_VALUE_CONSTRAINT = "http://psi.topicmaps.org/tmcl/unique-value-constraint";
 	private static final String REGULAR_EXPRESSION_CONSTRAINT = "http://psi.topicmaps.org/tmcl/regular-expression-constraint";
+	private static final String VARIANT_NAME_CONSTRAINT = "http://psi.topicmaps.org/tmcl/variant-name-constraint";
 
 	private Topic supertype_subtype;
 	
@@ -484,6 +486,9 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 
 		if (constraintType.getSubjectIdentifiers().contains(constraintType.getTopicMap().createLocator(REGULAR_EXPRESSION_CONSTRAINT)))
 			return new RegularExpressionConstraint();
+		
+		if (constraintType.getSubjectIdentifiers().contains(constraintType.getTopicMap().createLocator(VARIANT_NAME_CONSTRAINT)))
+			return new VariantNameConstraint();
 
 		throw new TMCLValidatorException("Unknown constraint type: " + constraintType);
 	}
