@@ -31,6 +31,7 @@ public class TopicOccurranceConstraintValidator extends AbstractTMAPIValidator {
 	/**
 	 * Constructor
 	 * @param id - The validator ID.
+	 * @param useIdentifierInMessages - Forces the usage of identifier in result messages.
 	 */
 	public TopicOccurranceConstraintValidator(String id, boolean useIdentifierInMessages) {
 	    super(id, useIdentifierInMessages);

@@ -25,6 +25,7 @@ public class TMAPIFactory implements IConstraintValidatorFactory {
 	
 	/**
 	 * Constructor
+	 * @param useIdentifierInMessages - Forces the usage of identifier in result messages.
 	 */
 	public TMAPIFactory(boolean useIdentifierInMessages) {
 		this.useIdentifierInMessages = useIdentifierInMessages;

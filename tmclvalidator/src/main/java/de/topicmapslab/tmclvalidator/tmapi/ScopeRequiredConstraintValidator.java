@@ -35,6 +35,7 @@ public class ScopeRequiredConstraintValidator extends AbstractTMAPIValidator {
 	/**
 	 * Constructor
 	 * @param id - The validator ID.
+	 * @param useIdentifierInMessages - Forces the usage of identifier in result messages.
 	 */
 	public ScopeRequiredConstraintValidator(String id, boolean useIdentifierInMessages) {
 	    super(id, useIdentifierInMessages);
@@ -93,6 +94,17 @@ public class ScopeRequiredConstraintValidator extends AbstractTMAPIValidator {
 		}
 	}
 	
+	/**
+	 * Check if the scoped objects are valid.
+	 * @param scopedObjects - Set of scoped objects.
+	 * @param scopeInstance - The required scope.
+	 * @param cardMin - Minimum cardinality.
+	 * @param cardMax - Maximum cardinality.
+	 * @param invalidConstructs - The result set.
+	 * @param name - The construct name, Name, Occurrence, or Association.
+	 * @param topic - The topic to which the scoped objects belong.
+	 * @throws TMCLValidatorException
+	 */
 	private void checkScope(Set<Scoped> scopedObjects, Topic scopeInstance, int cardMin, int cardMax, Map<Construct, Set<ValidationResult>> invalidConstructs, String name, Topic topic) throws TMCLValidatorException{
 		
 		int count = 0;

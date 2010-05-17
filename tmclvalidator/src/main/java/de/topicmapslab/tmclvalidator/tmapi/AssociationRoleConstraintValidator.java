@@ -34,6 +34,7 @@ public class AssociationRoleConstraintValidator extends AbstractTMAPIValidator {
 	/**
 	 * Constructor
 	 * @param id - The validator ID.
+	 * @param useIdentifierInMessages - Forces the usage of identifier in result messages.
 	 */
 	public AssociationRoleConstraintValidator(String id, boolean useIdentifierInMessages) {
 	    super(id, useIdentifierInMessages);

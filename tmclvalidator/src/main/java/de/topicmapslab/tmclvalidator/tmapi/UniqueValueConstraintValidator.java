@@ -36,6 +36,7 @@ public class UniqueValueConstraintValidator extends AbstractTMAPIValidator {
 	/**
 	 * Constructor
 	 * @param id - The validator ID.
+	 * @param useIdentifierInMessages - Forces the usage of identifier in result messages.
 	 */
 	public UniqueValueConstraintValidator(String id, boolean useIdentifierInMessages) {
 	    super(id, useIdentifierInMessages);
@@ -67,6 +68,12 @@ public class UniqueValueConstraintValidator extends AbstractTMAPIValidator {
 		literalIndex.close();
 	}
 	
+	/**
+	 * Checks if a number of constructs are unique with respect to their values.
+	 * @param constructs - Set of constructs.
+	 * @param invalidConstructs - The result set.
+	 * @throws TMCLValidatorException
+	 */
 	private void checkConstructOfUniqueness(Set<Construct> constructs, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException{
 		
 		Map<String, Construct> checkMap = new HashMap<String, Construct>();

@@ -1,4 +1,9 @@
-
+/**
+ * Copyright: Copyright 2010 Topic Maps Lab, University of Leipzig. http://www.topicmapslab.de/    
+ * License:   Apache License, Version 2.0 http://www.apache.org/licenses/LICENSE-2.0.html
+ * 
+ * @author Christian Haß
+ */
 package de.topicmapslab.tmclvalidator.tmapi;
 
 import java.util.HashSet;
@@ -14,15 +19,21 @@ import org.tmapi.core.Variant;
 import de.topicmapslab.tmclvalidator.TMCLValidatorException;
 import de.topicmapslab.tmclvalidator.ValidationResult;
 import de.topicmapslab.tmclvalidator.tmapi.constraint.IConstraint;
-import de.topicmapslab.tmclvalidator.tmapi.constraint.TopicNameConstraint;
 import de.topicmapslab.tmclvalidator.tmapi.constraint.VariantNameConstraint;
 
-
+/**
+ * Validator for the variant name constraint.
+ */
 public class VariantNameConstraintValidator extends AbstractTMAPIValidator {
 	
 	private static final String VARIANT_NAME_CONSTRAINT = "http://psi.topicmaps.org/tmcl/variant-name-constraint";
 	private static final String CONSTRAINT_TOPIC_TYPE = "http://psi.topicmaps.org/tmcl/constrained-topic-type";
 	
+	/**
+	 * Constructor
+	 * @param id - The validator ID.
+	 * @param useIdentifierInMessages - Forces the usage of identifier in result messages.
+	 */
 	public VariantNameConstraintValidator(String id, boolean useIdentifierInMessages) {
 		super(id, useIdentifierInMessages);
 	}
@@ -63,7 +74,12 @@ public class VariantNameConstraintValidator extends AbstractTMAPIValidator {
 		}
 	}
 	
-	
+	/**
+	 * Returns the variants of a name which have a specific theme.
+	 * @param name - The name.
+	 * @param variantTheme - The theme.
+	 * @return Set of variants. Can be empty but is never be null.
+	 */
 	private Set<Variant> getScopedVariants(Name name, Topic variantTheme){
 		
 		Set<Variant> result = new HashSet<Variant>();

@@ -34,6 +34,7 @@ public class ReifierConstraintValidator extends AbstractTMAPIValidator {
 	/**
 	 * Constructor
 	 * @param id - The validator ID.
+	 * @param useIdentifierInMessages - Forces the usage of identifier in result messages.
 	 */
 	public ReifierConstraintValidator(String id, boolean useIdentifierInMessages) {
 	    super(id, useIdentifierInMessages);
@@ -66,6 +67,16 @@ public class ReifierConstraintValidator extends AbstractTMAPIValidator {
 		}
 	}
 
+	/**
+	 * Checks if the reifiable construct is valid.
+	 * @param reifiable - The reifiable construct.
+	 * @param exspectedType - The supposed type.
+	 * @param cardMin - Minimum cardinality.
+	 * @param cardMax - Maximum cardinality.
+	 * @param name - Name of the construct, Name, Occurrence or Association
+	 * @param invalidConstructs - Result set.
+	 * @throws TMCLValidatorException
+	 */
 	private void checkConstruct(Reifiable reifiable, Topic exspectedType, int cardMin, int cardMax, String name, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException{
 		
 		Topic reifier = reifiable.getReifier();

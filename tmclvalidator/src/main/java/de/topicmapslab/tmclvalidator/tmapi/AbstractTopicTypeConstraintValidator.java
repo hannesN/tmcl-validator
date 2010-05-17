@@ -30,6 +30,7 @@ public class AbstractTopicTypeConstraintValidator  extends AbstractTMAPIValidato
 	/**
 	 * Constructor
 	 * @param id - The validator ID.
+	 * @param useIdentifierInMessages - Forces the usage of identifier in result messages.
 	 */
 	public AbstractTopicTypeConstraintValidator(String id, boolean useIdentifierInMessages) {
 	    super(id, useIdentifierInMessages);
@@ -53,18 +54,6 @@ public class AbstractTopicTypeConstraintValidator  extends AbstractTMAPIValidato
 			}
 		}
 
-//		// get constrained types and corresponding constraints
-//		Map<Topic, Set<IConstraint> > typesAndConstraints = getConstructTypesAndConstraints(mergedTopicMap, CONSTRAINED_TOPIC_TYPE, ABSTRACT_CONSTRAINT);
-//
-//		for(Map.Entry<Topic, Set<IConstraint>> entry:typesAndConstraints.entrySet())
-//		{
-//			Collection<Topic> instances = typeInstanceIndex.getTopics(entry.getKey());
-//			
-//			if(!instances.isEmpty())
-//			{
-//				addInvalidConstruct(entry.getKey(), "The topic has to be abstract.", invalidConstructs);
-//			}
-//		}
 	}
 
 }

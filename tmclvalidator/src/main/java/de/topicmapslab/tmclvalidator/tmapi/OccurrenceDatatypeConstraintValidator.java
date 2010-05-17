@@ -31,6 +31,7 @@ public class OccurrenceDatatypeConstraintValidator extends AbstractTMAPIValidato
 	/**
 	 * Constructor
 	 * @param id - The validator ID.
+	 * @param useIdentifierInMessages - Forces the usage of identifier in result messages.
 	 */
 	public OccurrenceDatatypeConstraintValidator(String id, boolean useIdentifierInMessages) {
 	    super(id, useIdentifierInMessages);

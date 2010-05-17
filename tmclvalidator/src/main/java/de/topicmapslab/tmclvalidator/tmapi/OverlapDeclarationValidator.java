@@ -43,6 +43,7 @@ public class OverlapDeclarationValidator extends AbstractTMAPIValidator {
 	/**
 	 * Constructor
 	 * @param id - The validator ID.
+	 * @param useIdentifierInMessages - Forces the usage of identifier in result messages.
 	 */
 	public OverlapDeclarationValidator(String id, boolean useIdentifierInMessages) {
 	    super(id, useIdentifierInMessages);
@@ -89,6 +90,13 @@ public class OverlapDeclarationValidator extends AbstractTMAPIValidator {
 		
 	}
 	
+	/**
+	 * Checks if a multi typed topic is valid according to the overlap constraint.
+	 * @param topic - The topic
+	 * @param overlays - Set of overplapping topic types.
+	 * @return True in case of yes, otherwise false.
+	 * @throws TMCLValidatorException
+	 */
 	private boolean isValid(Topic topic, Set<Set<Topic>> overlays) throws TMCLValidatorException
 	{
 
@@ -113,6 +121,11 @@ public class OverlapDeclarationValidator extends AbstractTMAPIValidator {
 		return true;
 	}
 	
+	/**
+	 * Gets the overlapping types specified by an overlap constraint.
+	 * @param overlapDeclaration - The constraint.
+	 * @return - Set of types.
+	 */
 	private Set<Topic> getOverlappingTypes(Topic overlapDeclaration){
 		
 		Set<Topic> topics = new HashSet<Topic>();
@@ -139,6 +152,13 @@ public class OverlapDeclarationValidator extends AbstractTMAPIValidator {
 		return topics;
 	}
 	
+	/**
+	 * Checks if two types are allowed to overlap.
+	 * @param type1 - Type one.
+	 * @param type2 - Type two.
+	 * @param overlays - Defined overlays.
+	 * @return True in case of yes, otherwise false.
+	 */
 	private boolean overlayExist(Topic type1, Topic type2, Set<Set<Topic>> overlays)
 	{
 		for(Set<Topic> set:overlays)
@@ -152,6 +172,13 @@ public class OverlapDeclarationValidator extends AbstractTMAPIValidator {
 		return false;
 	}
 
+	/**
+	 * Checks if two types are supertype-subtype related.
+	 * @param type1 - Type one.
+	 * @param type2 - Type two.
+	 * @return True in case of yes, otherwise false.
+	 * @throws TMCLValidatorException
+	 */
  	private boolean isSuperTypeSubType(Topic type1, Topic type2) throws TMCLValidatorException
 	{
 		if(isSupertype(type1, type2) || isSupertype(type2, type1))
@@ -166,6 +193,13 @@ public class OverlapDeclarationValidator extends AbstractTMAPIValidator {
 		return false;
 	}
 	
+ 	/**
+ 	 * Checks if a topic is supertype of an other topic.
+ 	 * @param supertype - The topic supposed to be the supertype.
+ 	 * @param subtype - The topic supposed to be the subtype.
+ 	 * @return True in case of yes, otherwise false.
+ 	 * @throws TMCLValidatorException
+ 	 */
 	private boolean isSupertype(Topic supertype, Topic subtype) throws TMCLValidatorException
 	{
 		

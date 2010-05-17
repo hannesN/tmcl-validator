@@ -111,6 +111,14 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 
 	}
 
+    /**
+     * Returns constraints and related constrained types. 
+     * @param topicMap - The topic map.
+     * @param associationTypeSubjectLocator - The subject identifier which specifies the association type over which the constrained construct and the constraint instance is connected.
+	 * @param constraintTypeSubjectLocator - The subject identifier of the constraint type.
+     * @return Map containing the constraints and the related types.
+     * @throws TMCLValidatorException
+     */
     protected Map<IConstraint, Topic> getConstraintsAndTypes(TopicMap topicMap, String associationTypeSubjectLocator, String constraintTypeSubjectLocator) throws TMCLValidatorException{
     	
     	Topic associationType = topicMap.getTopicBySubjectIdentifier(topicMap.createLocator(associationTypeSubjectLocator));
@@ -149,7 +157,11 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
     	return result;
     }
     
-    
+    /**
+     * Returns occurrences of a specific type. 
+     * @param type - The occurrence type.
+     * @return A set of occurrences. May be empty but never null.
+     */
     protected Set<Occurrence> getOccurrences(Topic type){
     	
     	Set<Occurrence> result = new HashSet<Occurrence>();
@@ -166,6 +178,11 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
     	return result;
     }
     
+    /**
+     * Returns names of a specific type. 
+     * @param type - The name type.
+     * @return A set of names. May be empty but never null.
+     */
     protected Set<Name> getNames(Topic type){
     	
     	Set<Name> result = new HashSet<Name>();
@@ -182,6 +199,11 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
     	return result;
     }
     
+    /**
+     * Returns associations of a specific type. 
+     * @param type - The association type.
+     * @return A set of associations. May be empty but never null.
+     */
     protected Set<Association> getAssociations(Topic type){
     	
     	Set<Association> result = new HashSet<Association>();
@@ -198,6 +220,11 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
     	return result;
     }
     
+    /**
+     * Returns topics of a specific type. 
+     * @param type - The topic type.
+     * @return A set of topics. May be empty but never null.
+     */
     protected Set<Topic> getTopics(Topic type){
     	
     	Set<Topic> result = new HashSet<Topic>();
@@ -215,6 +242,12 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
     	
     }
     
+    /**
+     * Returns topic names of a specific type. 
+     * @param topic - The topic to which the names belong.
+     * @param type - The name type.
+     * @return Set of names. May be empty but never null.
+     */
     protected Set<Name> getTopicNames(Topic topic, Topic type){
 		
 		Set<Name> names = topic.getNames();
@@ -227,6 +260,12 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 		return result;
 	}
 	
+    /**
+     * Returns topic occurrences of a specific type. 
+     * @param topic - The topic to which the occurrences belong.
+     * @param type - The occurrence type.
+     * @return Set of occurrences. May be empty but never null.
+     */
 	protected Set<Occurrence> getTopicOccurrences(Topic topic, Topic type){
 	
 		Set<Occurrence> occurrences = topic.getOccurrences();
@@ -239,6 +278,12 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 		return result;
 	}
 	
+	/**
+	 * Returns topic roles of a specific type. 
+	 * @param topic - The topic to which the roles belong.
+	 * @param type - The role type.
+	 * @return Set of roles. May be empty but never null.
+	 */
 	protected Set<Role> getTopicRoles(Topic topic, Topic type){
 		
 		Set<Role> roles = topic.getRolesPlayed();
@@ -251,6 +296,13 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 		return result;
 	}
 	
+	/**
+	 * Returns topic roles of a specific type which are part of a specific association type.
+	 * @param topic - The topic to which the roles belong.
+	 * @param roleType - The role type.
+	 * @param associationType - The association type.
+	 * @return Set of roles. May be empty but never null.
+	 */
 	protected Set<Role> getTopicRolesByAssociationType(Topic topic, Topic roleType, Topic associationType){
 		
 		Set<Role> roles = getTopicRoles(topic, roleType);
@@ -263,6 +315,12 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 		return result;
 	}
 	
+	/**
+	 * Returns associations of a specific type belonging to a specific topic.
+	 * @param topic - The topic to which the association belongs.
+	 * @param type - The association type.
+	 * @return Set of associations. May be empty but never null.
+	 */
 	protected Set<Association> getTopicAssociations(Topic topic, Topic type){
 
 		Set<Association> all = new HashSet<Association>();
@@ -283,7 +341,7 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
     /**
      * Returns all subtypes for the specific supertype, the supertype included, i.e. the whole hierarchy
      * @param superType
-     * @return
+     * @return Set of topics.
      */
     private Set<Topic> getTransientTypes(Topic superType){
     	
@@ -295,6 +353,12 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
     	return transientTypes;
     }
     
+    /**
+     * Returns all subtypes of a topic.
+     * @param superType - The supertype.
+     * @param subTypes - Set for the subtypes.
+     * @param allreadyCheckedTypes - Set of allready checked types.
+     */
     private void getAllSubtypes(Topic superType, Set<Topic> subTypes, Set<Topic> allreadyCheckedTypes){
     	
     	subTypes.add(superType); // add this type
@@ -313,6 +377,11 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
     	
     }
     
+    /**
+     * Returns the direct subtypes of a topic.
+     * @param superType - The topic acting as supertype.
+     * @return Set of topics.
+     */
     @SuppressWarnings("unchecked")
     private Set<Topic> getSubtypes(Topic superType){
 
@@ -371,70 +440,6 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 		return result;
 	}
 	
-	/**
-	 * Gets a list of topics and the corresponding constraints of a specific type.
-	 * @param topicMap - The topic map.
-	 * @param associationTypeSubjectLocator - The subject identifier which specifies the association type over which the constrained construct and the constraint instance is connected.
-	 * @param constraintTypeSubjectLocator - The subject identifier of the constraint type.
-	 * @return A map of topics and the corresponding constraints.
-	 * @throws TMCLValidatorException
-	 */
-    @Deprecated
-    protected Map<Topic, Set<IConstraint> >  getTopicsAndConstraints(TopicMap topicMap, String associationTypeSubjectLocator, String constraintTypeSubjectLocator) throws TMCLValidatorException{
-		
-		Map<Topic, Set<IConstraint> >  result = new HashMap<Topic, Set<IConstraint>>();
-		
-		// get types and constraints
-		Map<Topic, Set<IConstraint> >  typesAndConstraints = getConstructTypesAndConstraints(topicMap, associationTypeSubjectLocator, constraintTypeSubjectLocator);
-		
-		if(typesAndConstraints.isEmpty())
-			return result;
-
-		// get all topics which are instances of those types
-		Set<Topic> allTopics = getAllTopics(topicMap, typesAndConstraints.keySet());
-						
-		for(Topic topic:allTopics){
-			
-			Set<IConstraint> constraints = new HashSet<IConstraint>();
-			
-			for(Topic type:topic.getTypes()){
-				if(typesAndConstraints.get(type) != null)
-					constraints.addAll(typesAndConstraints.get(type));
-			}
-			
-			result.put(topic, constraints);
-		}
-		
-		return result;
-	}
-	
-	/**
-	 * Returns all topics witch have at least one of the types specified in a set.
-	 * @param mergedTopicMap - The topic map.
-	 * @param types - The set of topic types.
-	 * @return A set of topics.
-	 */
-    @Deprecated
-    private Set<Topic> getAllTopics(TopicMap mergedTopicMap, Set<Topic> types){
-
-    	
-    	if(types == null || types.isEmpty())
-    		return Collections.emptySet();
-    	
-    	TypeInstanceIndex typeInstanceIndex = mergedTopicMap.getIndex(TypeInstanceIndex.class);
-    	
-    	Set<Topic> result = new HashSet<Topic>();
-    	
-    	for(Topic type:types){
-    		Collection<Topic> topics = typeInstanceIndex.getTopics(type);
-    		
-    		for(Topic topic:topics)
-    			result.add(topic);
-    	}
-
-    	return result;
-    }
-
 	/**
 	 * Creates and returns an constraint wrapper object according to the constraint type.
 	 * @param constraintType - The constraint type.

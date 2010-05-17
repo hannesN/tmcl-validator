@@ -40,6 +40,7 @@ public class DeclarationConstraintsValidator extends AbstractTMAPIValidator {
 	/**
 	 * Constructor
 	 * @param id - The validator ID.
+	 * @param useIdentifierInMessages - Forces the usage of identifier in result messages.
 	 */
 	public DeclarationConstraintsValidator(String id, boolean useIdentifierInMessages) {
 	    super(id, useIdentifierInMessages);
@@ -117,6 +118,12 @@ public class DeclarationConstraintsValidator extends AbstractTMAPIValidator {
 
 	}
 	
+	/**
+	 * Checks if a topic has a specific type.
+	 * @param topic - The topic
+	 * @param type - The type.
+	 * @return True in case of yes, otherwise false.
+	 */
 	private boolean checkTopicType(Topic topic, Topic type)
 	{
 		if(type == null)
@@ -164,6 +171,11 @@ public class DeclarationConstraintsValidator extends AbstractTMAPIValidator {
 		return false;
 	}
 	
+	/**
+	 * Checks if a topic belongs to the TMCL schema, i.e. the identifier starts with 'http://psi.topicmaps.org/tmcl/'
+	 * @param topic - The topic.
+	 * @return True in case of yes, otherwise false.
+	 */
 	private boolean isTMCL(Topic topic)
 	{
 		Set<org.tmapi.core.Locator> subjectIdentifiers = topic.getSubjectIdentifiers();
@@ -185,6 +197,11 @@ public class DeclarationConstraintsValidator extends AbstractTMAPIValidator {
 		return false;
 	}
 	
+	/**
+	 * Checks if a topic belongs to the TMDM, i.e. the identifier starts with 'http://psi.topicmaps.org/iso13250/model/'
+	 * @param topic - The topic.
+	 * @return True in case of yes, otherwise false.
+	 */
 	private boolean isDataModel(Topic topic)
 	{
 		Set<org.tmapi.core.Locator> subjectIdentifiers = topic.getSubjectIdentifiers();
