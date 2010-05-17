@@ -464,9 +464,15 @@ function generateToc(toclevels) {
   <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
 </div>
 </div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>The TMCL validator is an open source project available under an Apache 2.0 license. The project is hosted on <a href="http://code.google.com/p/tmcl-validator/">http://code.google.com/p/tmcl-validator/</a>. If you find bugs or have feature requests please file a <a href="http://code.google.com/p/tmcl-validator/issues/list">ticket</a>.
+The current version is 1.2.</p></div>
+</div>
+</div>
 <h2 id="_scope">1. Scope</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>The Topic Maps Constraint Language (TMCL, ISO 19756) is a language defined to specify constraints and schemas for topic maps. The TMCL validator validates a given topic map against a schema compatible to the current draft (2009-11-19, <a href="http://www.isotopicmaps.org/tmcl/tmcl.html">http://www.isotopicmaps.org/tmcl/tmcl.html</a>).</p></div>
+<div class="paragraph"><p>The Topic Maps Constraint Language (TMCL, ISO 19756) is a language defined to specify constraints and schemas for topic maps. The TMCL validator validates a given topic map against a schema compatible to the current draft (2009-11-19, <a href="http://www.isotopicmaps.org/tmcl/tmcl.html">http://www.isotopicmaps.org/tmcl/tmcl.html</a>). For performance reason the currenct version of the validator (1.2) does only a loose validation, i.e. ignores the global validation rule.</p></div>
 </div>
 <h2 id="_getting_started">2. Getting started</h2>
 <div class="sectionbody">
@@ -567,17 +573,17 @@ cellspacing="0" cellpadding="4">
 </tbody>
 </table>
 </div>
+<div class="paragraph"><p>The TMCL loader is only used for running the tests. It simply copies the TMCL Templates
+(<a href="http://www.isotopicmaps.org/tmcl/templates.ctm">http://www.isotopicmaps.org/tmcl/templates.ctm</a>) into the schema file before the reader is invoked.
+This is necessary since the used CTM Reader dosn&#8217;t supports includes.</p></div>
 </div>
 <h2 id="_functionality">3. Functionality</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>The main functionality is to validate a topic map against a topic map schema.</p></div>
-<div class="paragraph"><p><em>Note:</em> In the current implementation of the TMCL validator merges the topic map with the schema
-to increase the performance of the validation process as well as makes it easier to implement.
-This however, will change the topic map, therefore it is not recommended to use the topic map instance
-further after an validation process.</p></div>
-<div class="paragraph"><p>To use the validator you have to create a new instance of the TMCLValidator class and give the constuctor an TMAPI instance
-of the topic map schema.
-Afterwards just call the validate() method give the to be validated topic map as an parameter.
+<div class="paragraph"><p>To use the validator you have to create a new instance of the TMCLValidator class and call the validate() method.
+You can whether validate a single topic map which also contains the schema information or you can give the schema
+topic map as an additional parameter. In this case the topic map and the schema will be merged using the mergeIn() method of
+the used topic map engine.
 The method returns a map of invalid topic map constructs together with a set of results for each construct.
 A result consists of the constraint id, i.e the subject identifier of the violated TMCL constraint, and an error message.
 For each result, you can access the constraint id via getConstraintId() and the error message via getMessage().</p></div>
@@ -616,20 +622,16 @@ public class Excample {
 
                 // read a CTM topic map and schema
 
-                TopicMap map = system.createTopicMap("test:test");
-                TopicMap schema = system.createTopicMap("test:schema");
+                TopicMap map = system.createTopicMap("test:topicmap.ctm");
 
-                File fmap = new File("map.ctm");
-                File fschema = new File("schema.ctm");
+                File fmap = new File("topicmap.ctm");
 
                 CTMTopicMapReader reader = new CTMTopicMapReader(map, fmap);
                 reader.read();
 
-                reader = new CTMTopicMapReader(schema, fschema);
-
                 // validate
 
-                TMCLValidator validator = new TMCLValidator(schema);
+                TMCLValidator validator = new TMCLValidator();
                 Map&lt;Construct, Set&lt;ValidationResult&gt;&gt; invalidConstructs = validator.validate(map);
 
                 // plot result
@@ -662,10 +664,13 @@ public class Excample {
 
 }</tt></pre>
 </div></div>
+<div>
+ <a href="http://www.topicmapslab.de/"><span style="position: fixed; right: 0px; bottom: 50px; display: block; background: url('http://projects.topicmapslab.de/images/sidelabel_right.png') no-repeat scroll; text-indent: 40000px; width: 24px; height: 181px; z-index: 100001;"> topicmapslab.de </span></a>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2010-03-17 17:11:34 CEST
+Last updated 2010-05-17 15:41:57 CEST
 </div>
 </div>
 </body>

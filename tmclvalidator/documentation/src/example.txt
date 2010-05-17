@@ -31,21 +31,16 @@ public class Excample {
 	        
         	// read a CTM topic map and schema
          	
-        	TopicMap map = system.createTopicMap("test:test");
-        	TopicMap schema = system.createTopicMap("test:schema");
-        	
-        	File fmap = new File("map.ctm");
-        	File fschema = new File("schema.ctm");
-        	
+        	TopicMap map = system.createTopicMap("test:topicmap.ctm");
+        	        	
+        	File fmap = new File("topicmap.ctm");
+        	        	
         	CTMTopicMapReader reader = new CTMTopicMapReader(map, fmap);
-    		reader.read();
-    		
-    		reader = new CTMTopicMapReader(schema, fschema);
     		reader.read();
     		
     		// validate
     		
-    		TMCLValidator validator = new TMCLValidator(schema); 
+    		TMCLValidator validator = new TMCLValidator(); 
     		Map<Construct, Set<ValidationResult>> invalidConstructs = validator.validate(map);
     		
     		// plot result

@@ -1,6 +1,7 @@
 = TMCL Validator documentation =
 
 The TMCL validator is an open source project available under an Apache 2.0 license. The project is hosted on http://code.google.com/p/tmcl-validator/. If you find bugs or have feature requests please file a http://code.google.com/p/tmcl-validator/issues/list[ticket].
+The current version is 1.2.
 
 include::scope.txt[]
 
