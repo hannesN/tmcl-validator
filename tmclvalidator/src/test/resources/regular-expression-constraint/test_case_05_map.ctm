@@ -5,20 +5,26 @@
 
 %prefix tmcl <http://psi.topicmaps.org/tmcl/>
 %prefix tmdm <http://psi.topicmaps.org/iso13250/model/>
-%prefix xsd <http://www.w3.org/2001/XMLSchema#>
+
 %prefix validator <http://tmclvalidator.topicmapslab.de/>
 
 # --[ topic types ]-----------------------------------------------------------------------------------
 
-validator:city isa tmcl:topic-type;
-	- "City" .
+validator:person isa tmcl:topic-type;
+	- "Person" .
+
+# --[ name types ]------------------------------------------------------------------------------------
+
+validator:vorname isa tmcl:name-type.
+validator:nachname isa tmcl:name-type.
 
 # --[ instances ]-------------------------------------------------------------------------------------
 
-validator:leipzig isa validator:city;
-	- "Leipzig";
-	validator:population: "515459" ^^xsd:zahl;
-	validator:website: "http://www.leipzig.de" ^^xsd:anyURI .		
+validator:person_01 isa validator:person;
+	- validator:vorname: "Test";
+	- validator:nachname: "Person";
+	- validator:username: "person_01";
+	validator:email: "person_01@test.t" .		
 
 # --[ associations ]----------------------------------------------------------------------------------
 

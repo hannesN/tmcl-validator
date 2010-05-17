@@ -5,7 +5,7 @@
 
 %prefix tmcl <http://psi.topicmaps.org/tmcl/>
 %prefix tmdm <http://psi.topicmaps.org/iso13250/model/>
-
+%prefix xsd <http://www.w3.org/2001/XMLSchema#>
 %prefix validator <http://tmclvalidator.topicmapslab.de/>
 
 # --[ topic types ]-----------------------------------------------------------------------------------

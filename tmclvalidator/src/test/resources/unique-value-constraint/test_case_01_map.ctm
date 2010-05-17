@@ -20,6 +20,13 @@ validator:instance_2 isa validator:topic_type_1;
 	- validator:name_type_1: "Instance 2 Name";
 	- validator:name_type_2: "Name";
 	validator:occurrence_type_1: "Instance 2 Occurrence";
-	validator:occurrence_type_2: "Occurrence".	
+	validator:occurrence_type_2: "Occurrence".
+	
+# same values as instance_2 but different types
+validator:instance_3 isa validator:topic_type_1;
+	- validator:name_type_2: "Instance 2 Name";
+	- validator:name_type_1: "Name";
+	validator:occurrence_type_2: "Instance 2 Occurrence";
+	validator:occurrence_type_1: "Occurrence".
 
 	

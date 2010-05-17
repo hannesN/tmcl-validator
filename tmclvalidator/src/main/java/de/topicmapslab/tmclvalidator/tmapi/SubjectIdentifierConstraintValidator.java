@@ -35,50 +35,33 @@ public class SubjectIdentifierConstraintValidator extends AbstractTMAPIValidator
 	public SubjectIdentifierConstraintValidator(String id, boolean useIdentifierInMessages) {
 	    super(id, useIdentifierInMessages);
     }
-	
-	
+		
 	public void validate(TopicMap mergedTopicMap, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException
 	{
+		Map<IConstraint, Topic> constraintsAndTypes = getConstraintsAndTypes(mergedTopicMap, CONSTRAINED_TOPIC_TYPE, SUBJECT_IDENTIFIER_CONSTRAINT);
+		
+		for(Map.Entry<IConstraint, Topic> entry:constraintsAndTypes.entrySet()){
+			
+			String regExp = ((SubjectIdentifierConstraint)entry.getKey()).regExp;
+			int cardMin = ((SubjectIdentifierConstraint)entry.getKey()).cardMin;
+			int cardMax = ((SubjectIdentifierConstraint)entry.getKey()).cardMax;
+			
+			for(Topic instance:getTopics(entry.getValue())){
 				
-		// get constrained types and corresponding constraints
-		Map<Topic, Set<IConstraint> > topicAndConstraints = getTopicsAndConstraints(mergedTopicMap, CONSTRAINED_TOPIC_TYPE, SUBJECT_IDENTIFIER_CONSTRAINT);
-
-		for(Map.Entry<Topic, Set<IConstraint>> entry:topicAndConstraints.entrySet())
-		{
-			Topic topic = entry.getKey();
-
-			Set<Locator> subjectIdentifiers = topic.getSubjectIdentifiers();
+				Set<Locator> si = instance.getSubjectIdentifiers();
 				
-			// check each constraint
-			for(IConstraint constraint:entry.getValue())
-			{
-				if(!(constraint instanceof SubjectIdentifierConstraint))
-					throw new TMCLValidatorException("Constraint is no Subject Identifier Constraint.");
+				if(cardMin > si.size())
+					addInvalidConstruct(instance, "The topic has too few subject identifiers [" + si.size() + " of min " + cardMin + "]", invalidConstructs);
 				
-				SubjectIdentifierConstraint si_constraint = (SubjectIdentifierConstraint)constraint;
-				
-				if(subjectIdentifiers.size() < si_constraint.cardMin)
-				{
-					addInvalidConstruct(topic, "Topic has too few subject identifier", invalidConstructs);
-				}
-				
-				if(si_constraint.cardMax != -1 && subjectIdentifiers.size() > si_constraint.cardMin)
-				{
-					addInvalidConstruct(topic, "Topic has too many subject identifier", invalidConstructs);
-				}
-				
-				// check regular expression
-				for(Locator subjectIdentifier:subjectIdentifiers)
-				{
-					if(!subjectIdentifier.getReference().matches(si_constraint.regExp))
-					{
-						addInvalidConstruct(topic, "Subject identifier '" + subjectIdentifier.getReference() + "' doesn't macht the reqular expression '" + si_constraint.regExp + "'.", invalidConstructs);
-					}
-				}
+				if(cardMax != -1 && cardMax < si.size())
+					addInvalidConstruct(instance, "The topic has too many subject identifiers [" + si.size() + " of max " + cardMin + "]", invalidConstructs);
+			
+				// check regex
+				for(Locator l:si)
+					if(!l.getReference().matches(regExp))
+						addInvalidConstruct(instance, "The subject identifier '" + l.getReference() +  "' doesn't match the regular expression '" + regExp + "'", invalidConstructs);
 			}
 		}
 	}
-	
-	
 	
 }

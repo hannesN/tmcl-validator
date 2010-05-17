@@ -22,6 +22,7 @@ validator:subject isa tmcl:role-type.
 # --[ instances ]-------------------------------------------------------------------------------------
 
 validator:timeframe_1 isa validator:timeframe .
+validator:timeframe_2 isa validator:timeframe .
 	
 validator:german isa validator:language .
 

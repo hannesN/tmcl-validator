@@ -7,6 +7,8 @@
 package de.topicmapslab.tmclvalidator.tmapi;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -54,32 +56,60 @@ public class UniqueValueConstraintValidator extends AbstractTMAPIValidator {
 		{
 			// check occurrences
 			Collection<Occurrence> occurrences = typeInstanceIndex.getOccurrences(entry.getKey());
-			
-			for(Occurrence occurrence:occurrences)
-			{
-				Collection<Occurrence> occurrences_with_value = literalIndex.getOccurrences(occurrence.getValue());
-				
-				if(occurrences_with_value.size() > 1)
-				{
-					addInvalidConstruct(occurrence, "The Occurrence violates the unique value constraint.", invalidConstructs);
-				}
-			}
+			checkConstructOfUniqueness(new HashSet<Construct>(occurrences), invalidConstructs);
 
 			// check names
 			Collection<Name> names = typeInstanceIndex.getNames(entry.getKey());
+			checkConstructOfUniqueness(new HashSet<Construct>(names), invalidConstructs);
 			
-			for(Name name:names)
-			{
-				Collection<Name> names_with_value = literalIndex.getNames(name.getValue());
-				
-				if(names_with_value.size() > 1)
-				{
-					addInvalidConstruct(name, "The Name violates the unique value constraint.", invalidConstructs);
-				}
-			}
 		}
 		
 		literalIndex.close();
+	}
+	
+	private void checkConstructOfUniqueness(Set<Construct> constructs, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException{
+		
+		Map<String, Construct> checkMap = new HashMap<String, Construct>();
+		Map<String,Set<Construct>> invalidConstructMap = new HashMap<String, Set<Construct>>();
+		
+		for(Construct construct:constructs){
+			
+			String value;
+			
+			if(construct instanceof Occurrence)
+				value = ((Occurrence)construct).getValue();
+			else value = ((Name)construct).getValue();
+			
+			Construct prevConstruct = null;
+			
+			if((prevConstruct = checkMap.put(value, construct)) != null){
+				// value is not unique
+				
+				Set<Construct> ununiqeConstructs = null;
+				
+				if((ununiqeConstructs = invalidConstructMap.get(value)) == null){
+					ununiqeConstructs = new HashSet<Construct>();
+					ununiqeConstructs.add(prevConstruct);
+				}
+				
+				ununiqeConstructs.add(construct);
+				invalidConstructMap.put(value, ununiqeConstructs);
+			}
+		}
+		
+		for(Map.Entry<String, Set<Construct>>entry:invalidConstructMap.entrySet()){
+
+			for(Construct invalidConstruct:entry.getValue()){
+				
+				if(invalidConstruct instanceof Occurrence){
+					addInvalidConstruct(invalidConstruct, "The value '" + entry.getKey() + "' of the occurrence violates the unique value constraint.", invalidConstructs);
+				}else{
+					addInvalidConstruct(invalidConstruct, "The value '" + entry.getKey() + "' of the name construct violates the unique value constraint.", invalidConstructs);
+				}
+			}
+			
+		}
+		
 	}
 	
 	

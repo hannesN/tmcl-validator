@@ -6,8 +6,6 @@
  */
 package de.topicmapslab.tmclvalidator.tmapi;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,7 +16,6 @@ import org.tmapi.core.Occurrence;
 import org.tmapi.core.Reifiable;
 import org.tmapi.core.Topic;
 import org.tmapi.core.TopicMap;
-import org.tmapi.index.TypeInstanceIndex;
 
 import de.topicmapslab.tmclvalidator.TMCLValidatorException;
 import de.topicmapslab.tmclvalidator.ValidationResult;
@@ -41,92 +38,59 @@ public class ReifierConstraintValidator extends AbstractTMAPIValidator {
 	public ReifierConstraintValidator(String id, boolean useIdentifierInMessages) {
 	    super(id, useIdentifierInMessages);
     }
-	
-	
+		
 	public void validate(TopicMap mergedTopicMap, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException 
 	{
-		TypeInstanceIndex typeInstanceIndex = mergedTopicMap.getIndex(TypeInstanceIndex.class);
 		
-		// get constrained types and corresponding constraints
-		Map<Topic, Set<IConstraint> > typesAndConstraints = getConstructTypesAndConstraints(mergedTopicMap, CONSTRAINT_STATEMENT, REIFIER_CONSTRAINT);
+		Map<IConstraint, Topic> constraintsAndTypes = getConstraintsAndTypes(mergedTopicMap, CONSTRAINT_STATEMENT, REIFIER_CONSTRAINT);
 		
-		for(Map.Entry<Topic, Set<IConstraint>> entry:typesAndConstraints.entrySet())
-		{
-			Collection<Reifiable> reifiableObjects = new HashSet<Reifiable>();
+		for(Map.Entry<IConstraint, Topic> entry:constraintsAndTypes.entrySet()){
+			
+			Topic reifierType = ((ReifierConstraint)entry.getKey()).allowedReifier;
+			int cardMin = ((ReifierConstraint)entry.getKey()).cardMin;
+			int cardMax = ((ReifierConstraint)entry.getKey()).cardMax;
+			
 			
 			// check associations
-			Collection<Association> associations = typeInstanceIndex.getAssociations(entry.getKey());
+			for(Association association:getAssociations(entry.getValue()))
+				checkConstruct((Reifiable)association, reifierType, cardMin, cardMax, "association", invalidConstructs);
+						
+			// check names
+			for(Name name:getNames(entry.getValue()))
+				checkConstruct((Reifiable)name, reifierType, cardMin, cardMax, "name", invalidConstructs);
 			
-			if(!associations.isEmpty())
-			{
-				for(Association association:associations)
-					reifiableObjects.add(association);
-				
-			}else{
-				
-				// check occurrences
-				Collection<Occurrence> occurrences = typeInstanceIndex.getOccurrences(entry.getKey());
-				
-				if(!occurrences.isEmpty())
-				{
-					for(Occurrence occurrence:occurrences)
-						reifiableObjects.add(occurrence);
-										
-				}else{
-					
-					// check names
-					Collection<Name> names = typeInstanceIndex.getNames(entry.getKey());
-					
-					if(!names.isEmpty())
-					{
-						for(Name name:names)
-							reifiableObjects.add(name);
-						
-					}else{ 
-
-						addInvalidConstruct(entry.getKey(), "The constrained topic type has no instances!", invalidConstructs);
-					}
-					
-				}
-			}
+			// check occurrences
+			for(Occurrence occurrence:getOccurrences(entry.getValue()))
+				checkConstruct((Reifiable)occurrence, reifierType, cardMin, cardMax, "occurrence", invalidConstructs);
 			
-			for(Reifiable reifiableObject:reifiableObjects)
-			{
-				// get reifier
-				Topic reifier = reifiableObject.getReifier();
-				boolean reifierTypeFound = false;
-				
-				for(IConstraint constraint:entry.getValue())
-				{
-					ReifierConstraint reifier_constraint = (ReifierConstraint)constraint;
-					
-					if(reifier != null && reifier.getTypes().contains(reifier_constraint.allowedReifier))
-					{
-						reifierTypeFound = true;
-						
-						if(reifier_constraint.cardMin == 0 && reifier_constraint.cardMax == 0)
-						{
-							// cannot-have-reifier
-							addInvalidConstruct(reifiableObject, "Object must not have an reifier of type " + getBestName(reifier_constraint.allowedReifier), invalidConstructs);
-						}
-					
-					}else{
-						
-						if(reifier_constraint.cardMin == 1 && reifier_constraint.cardMax == 1)
-						{
-							// must-have-reifier
-							addInvalidConstruct(reifiableObject, "Object must have an reifier of type " + getBestName(reifier_constraint.allowedReifier), invalidConstructs); 					
-						}
-					}
-				}
-				
-				if(reifier != null && !reifierTypeFound)
-				{
-					addInvalidConstruct(reifiableObject, "Object have an unallowed reifier!", invalidConstructs);
-				}
-			}
 		}
 	}
 
+	private void checkConstruct(Reifiable reifiable, Topic exspectedType, int cardMin, int cardMax, String name, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException{
+		
+		Topic reifier = reifiable.getReifier();
+		
+		if(reifier == null){
+			
+			if(cardMin > 0){
+				addInvalidConstruct(reifiable, "The " + name + " needs to have a reifier of type " + getBestName(exspectedType), invalidConstructs);
+				return;
+			}
+			
+		}else{
+			
+			if(cardMax < 1){
+				addInvalidConstruct(reifiable, "The " + name + " musst not have a reifier", invalidConstructs);
+				return;
+			}
+			
+			Set<Topic> reifierTypes = reifier.getTypes();
+			
+			if(!reifierTypes.contains(exspectedType))
+				addInvalidConstruct(reifiable, "The reifier of the " + name + " needs to be of type " + getBestName(exspectedType), invalidConstructs);
+		}
+	}
 	
 }
+
+

@@ -51,6 +51,9 @@ public class TopicReifiesConstraintValidatorTest extends AbstractTest {
 	private static String testMapFile_13 = "./src/test/resources/topic-reifies-constraint/test_case_13_map.ctm";
 	private static String testSchemaFile_13 = "./src/test/resources/topic-reifies-constraint/test_case_13_schema.ctm";
 	
+	private static String testMapFile_14 = "./src/test/resources/topic-reifies-constraint/test_case_14_map.ctm";
+	private static String testSchemaFile_14 = "./src/test/resources/topic-reifies-constraint/test_case_14_schema.ctm";
+	
 	@Test
     public final void testCase01() throws Exception {
 
@@ -133,5 +136,11 @@ public class TopicReifiesConstraintValidatorTest extends AbstractTest {
 		checkForInvalidTopic(testMapFile_13, testSchemaFile_13, "http://tmclvalidator.topicmapslab.de/association_reifier_2");
     }
 	
+	@Test
+    public final void testCase14() throws Exception {
+
+		this.results = runValidator(testMapFile_14, testSchemaFile_14);
+		assertEquals(0, this.results.size());
+    }
 	
 }

@@ -10,9 +10,13 @@
 
 # --[ MAP ]-------------------------------------------------------------------------------------------
 
-validator:instance_1 isa validator:topic_type_1;
-	- validator:name_type_1: "Name 1";
-	- "Name 2";
-	- validator:name_type_2: "Name 3" .
+validator:name_reifier_1 isa validator:name_may_reifier.
+validator:name_reifier_2 isa validator:name_may_reifier.
+
+validator:instance_1
+	- validator:name_type_1: "Insrance 1 Name" ~validator:name_reifier_1 .
+	
+validator:instance_2
+	- validator:name_type_2: "Insrance 2 Name" ~validator:name_reifier_2 .
 
 	

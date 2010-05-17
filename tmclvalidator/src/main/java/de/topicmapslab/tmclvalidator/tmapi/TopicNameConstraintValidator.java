@@ -6,7 +6,6 @@
  */
 package de.topicmapslab.tmclvalidator.tmapi;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,85 +39,26 @@ public class TopicNameConstraintValidator extends AbstractTMAPIValidator {
 
 	public void validate(TopicMap mergedTopicMap, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException 
 	{
-		Map<Topic, Set<IConstraint> > topicAndConstraints = getTopicsAndConstraints(mergedTopicMap, CONSTRAINT_TOPIC_TYPE, TOPIC_NAME_CONSTRAINT);
+		Map<IConstraint,Topic> constraintsAndTypes = getConstraintsAndTypes(mergedTopicMap, CONSTRAINT_TOPIC_TYPE, TOPIC_NAME_CONSTRAINT);
 		
-		for(Map.Entry<Topic, Set<IConstraint>> entry:topicAndConstraints.entrySet())
-		{
-			Topic topic = entry.getKey();
-
-			Set<Name> names = topic.getNames();
-
-			Map<TopicNameConstraint, Integer> cardinalityCounter = new HashMap<TopicNameConstraint, Integer>();
-
-			for(Name name:names)
-			{
-				boolean nameTypeFound = false;
-				
-				// check each constraint
-				for(IConstraint constraint:entry.getValue())
-				{
-					if(!(constraint instanceof TopicNameConstraint)) /// TODO extract this from here
-						throw new TMCLValidatorException("Constraint is no Topic Name Constraint.");
-					
-					TopicNameConstraint name_constraint = (TopicNameConstraint)constraint;
-					
-					if(name.getType().equals(name_constraint.nameType))
-					{
-						nameTypeFound = true;
-						
-						// increase cardinality counter
-						int count = 0;
-						if(cardinalityCounter.get(name_constraint) != null) 
-							count = cardinalityCounter.get(name_constraint);
-						
-						count++;
-						cardinalityCounter.put(name_constraint, count);
-					}
-				}
-				
-				if(!nameTypeFound)
-				{
-					addInvalidConstruct(topic, "Unexspected name type (" + getBestName(name.getType()) + ")", invalidConstructs);
-				}
-			}
-		
-			// check cardinality
-			checkCardinality(invalidConstructs, entry.getValue(), topic, cardinalityCounter);
+		for(Map.Entry<IConstraint, Topic> entry:constraintsAndTypes.entrySet()){
 			
+			int cardMin = ((TopicNameConstraint)entry.getKey()).cardMin;
+			int cardMax = ((TopicNameConstraint)entry.getKey()).cardMax;
+			Topic nameType = ((TopicNameConstraint)entry.getKey()).nameType;
+			
+			for(Topic instance:getTopics(entry.getValue())){
+				
+				Set<Name> names = getTopicNames(instance, nameType);
+				
+				if(cardMin > names.size())
+					addInvalidConstruct(instance, "The topic has too few names of type " + getBestName(nameType) + " [" + names.size() + " of min " + cardMin + "]", invalidConstructs);
+				
+				if(cardMax != -1 && cardMax < names.size())
+					addInvalidConstruct(instance, "The topic has too many names of type " + getBestName(nameType) + " [" + names.size() + " of max " + cardMin + "]", invalidConstructs);
+				
+			}
 		}
 	}
-
-	/**
-	 * Checks the cardinality.
-	 * @param invalidConstructs - Set of invalid constructs.
-	 * @param constraints - Set of constraint wrapper.
-	 * @param topic - The topic which is checked.
-	 * @param cardinalityCounter - The cardinalities.
-	 */
-    private void checkCardinality(Map<Construct, Set<ValidationResult>> invalidConstructs, Set<IConstraint> constraints, Topic topic, Map<TopicNameConstraint, Integer> cardinalityCounter) throws TMCLValidatorException {
-	    
-    	for(IConstraint constraint:constraints)
-	    {
-	    	TopicNameConstraint name_constraint = (TopicNameConstraint)constraint;
-	    	
-	    	if (name_constraint.cardMin != 0 || name_constraint.cardMax != -1) 
-	    	{
-	    		int count = 0;
-	    		if(cardinalityCounter.get(name_constraint) != null) count = cardinalityCounter.get(name_constraint);
-	    		
-	    		if (count < name_constraint.cardMin) 
-	    		{
-	    			addInvalidConstruct(topic, "Number of names of type " + getBestName(name_constraint.nameType) + " [" + count + "] is less then the specified minimum [" + name_constraint.cardMin + "]", invalidConstructs);
-	    		}
-
-	    		if (name_constraint.cardMax != -1 && count > name_constraint.cardMax) 
-	    		{
-	    			addInvalidConstruct(topic, "Number of names of type " + getBestName(name_constraint.nameType) + " [" + count + "] is bigger then the specified maximum [" + name_constraint.cardMax + "]", invalidConstructs);
-	    		}
-	    	}
-	    }
-    }
-	
-	
 
 }

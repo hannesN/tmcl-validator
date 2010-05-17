@@ -42,7 +42,7 @@
     <dependency>
     	<groupId>de.topicmapslab</groupId>
     	<artifactId>tmcl-loader</artifactId>
-    	<version>1.0.0</version>
+    	<version>1.0.1</version>
     	<scope>test</scope>
     </dependency>
     <dependency>

@@ -6,7 +6,6 @@
  */
 package de.topicmapslab.tmclvalidator.tmapi;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,79 +38,28 @@ public class TopicOccurranceConstraintValidator extends AbstractTMAPIValidator {
 
 	public void validate(TopicMap mergedTopicMap, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException 
 	{
-		Map<Topic, Set<IConstraint> > topicAndConstraints = getTopicsAndConstraints(mergedTopicMap, CONSTRAINT_TOPIC_TYPE, TOPIC_OCCURRENCE_CONSTRAINT);
-
-		for(Map.Entry<Topic, Set<IConstraint>> entry:topicAndConstraints.entrySet())
-		{
+		Map<IConstraint,Topic> constraintsAndTypes = getConstraintsAndTypes(mergedTopicMap, CONSTRAINT_TOPIC_TYPE, TOPIC_OCCURRENCE_CONSTRAINT);
+		
+		for(Map.Entry<IConstraint, Topic> entry:constraintsAndTypes.entrySet()){
 			
-			Topic topic = entry.getKey();
-
-			Set<Occurrence> occurrences = topic.getOccurrences();
-
-			Map<TopicOccurrenceConstraint, Integer> cardinalityCounter = new HashMap<TopicOccurrenceConstraint, Integer>();
-					
-			for(Occurrence occurrence:occurrences)
-			{
-				boolean occurrenceTypeFound = false;
+			int cardMin = ((TopicOccurrenceConstraint)entry.getKey()).cardMin;
+			int cardMax = ((TopicOccurrenceConstraint)entry.getKey()).cardMax;
+			Topic occurrenceType = ((TopicOccurrenceConstraint)entry.getKey()).occurrenceType;
+			
+			for(Topic instance:getTopics(entry.getValue())){
 				
-				// check each constraint
-				for(IConstraint constraint:entry.getValue())
-				{
-					TopicOccurrenceConstraint occurrance_constraint = (TopicOccurrenceConstraint)constraint;
-					
-					if(occurrence.getType().equals(occurrance_constraint.occurrenceType))
-					{
-						occurrenceTypeFound = true;
-						// increase cardinality counter
-						int count = 0;
-						if(cardinalityCounter.get(occurrance_constraint) != null) count = cardinalityCounter.get(occurrance_constraint);
-						count++;
-						cardinalityCounter.put(occurrance_constraint, count);
-					}
-				}
+				Set<Occurrence> occurrences = getTopicOccurrences(instance, occurrenceType);
 				
-				if(!occurrenceTypeFound)
-				{
-					addInvalidConstruct(topic, "Unexspected occurrence type (" + getBestName(occurrence.getType()) + ")", invalidConstructs);
-				}
+				if(cardMin > occurrences.size())
+					addInvalidConstruct(instance, "The topic has too few occurrences of type " + getBestName(occurrenceType) + " [" + occurrences.size() + " of min " + cardMin + "]", invalidConstructs);
+				
+				if(cardMax != -1 && cardMax < occurrences.size())
+					addInvalidConstruct(instance, "The topic has too many occurrences of type " + getBestName(occurrenceType) + " [" + occurrences.size() + " of max " + cardMin + "]", invalidConstructs);
+				
 			}
-		
-			// check cardinality
-			checkCardinality(invalidConstructs, entry.getValue(), topic, cardinalityCounter);
-		
 		}
+		
 	}
 
-	/**
-	 * Checks the cardinality.
-	 * @param invalidConstructs - Set of invalid constructs.
-	 * @param constraints - Set of constraint wrapper.
-	 * @param topic - The topic which is checked.
-	 * @param cardinalityCounter - The cardinalities.
-	 */
-    private void checkCardinality(Map<Construct, Set<ValidationResult>> invalidConstructs, Set<IConstraint> constraints, Topic topic, Map<TopicOccurrenceConstraint, Integer> cardinalityCounter) throws TMCLValidatorException {
-	    
-    	for(IConstraint constraint:constraints)
-	    {
-	    	TopicOccurrenceConstraint occurrence_constraint = (TopicOccurrenceConstraint)constraint;
-	    	
-	    	if (occurrence_constraint.cardMin != 0 || occurrence_constraint.cardMax != -1) 
-	    	{
-	    		int count = 0;
-	    		if(cardinalityCounter.get(occurrence_constraint) != null) count = cardinalityCounter.get(occurrence_constraint);
-	    		
-	    		if (count < occurrence_constraint.cardMin) 
-	    		{
-	    			addInvalidConstruct(topic, "Number of occurrences of type " + getBestName(occurrence_constraint.occurrenceType) + " [" + count + "] is less then the specified minimum [" + occurrence_constraint.cardMin + "]", invalidConstructs);
-	    		}
-
-	    		if (occurrence_constraint.cardMax != -1 && count > occurrence_constraint.cardMax) 
-	    		{
-	    			addInvalidConstruct(topic, "Number of occurrences of type " + getBestName(occurrence_constraint.occurrenceType) + " [" + count + "] is bigger then the specified maximum [" + occurrence_constraint.cardMax + "]", invalidConstructs);
-	    		}
-	    	}
-	    }
-    }
-	
 
 }

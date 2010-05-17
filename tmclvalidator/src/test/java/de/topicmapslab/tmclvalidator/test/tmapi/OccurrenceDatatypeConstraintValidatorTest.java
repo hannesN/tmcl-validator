@@ -26,6 +26,10 @@ public class OccurrenceDatatypeConstraintValidatorTest extends AbstractTest {
 	private static String testMapFile_04 = "./src/test/resources/occurrence-datatype-constraint/test_case_04_map.ctm";
 	private static String testSchemaFile_04 = "./src/test/resources/occurrence-datatype-constraint/test_case_04_schema.ctm";
 
+	private static String testMapFile_05 = "./src/test/resources/occurrence-datatype-constraint/test_case_05_map.ctm";
+	private static String testSchemaFile_05 = "./src/test/resources/occurrence-datatype-constraint/test_case_05_schema.ctm";
+
+	
 	@Test
     public final void testCase01() throws Exception {
 
@@ -49,6 +53,12 @@ public class OccurrenceDatatypeConstraintValidatorTest extends AbstractTest {
     public final void testCase04() throws Exception {
 
 		runValidator(testMapFile_04, testSchemaFile_04);
+    }
+	
+	@Test
+    public final void testCase05() throws Exception {
+
+		checkNumberAndType(testMapFile_05, testSchemaFile_05, 1, "http://tmclvalidator.topicmapslab.de/population");
     }
 	
 }

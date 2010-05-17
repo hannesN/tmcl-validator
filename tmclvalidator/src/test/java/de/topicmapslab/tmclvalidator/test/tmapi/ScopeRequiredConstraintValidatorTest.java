@@ -78,7 +78,7 @@ public class ScopeRequiredConstraintValidatorTest extends AbstractTest {
 		checkForInvalidTopic(testMapFile_06, testSchemaFile_06, "http://tmclvalidator.topicmapslab.de/instance_1");
     }
 	
-	@Test // to many themes in name scope
+	@Test
 	public final void testCase07() throws Exception {
 
 		checkForInvalidTopic(testMapFile_07, testSchemaFile_07, "http://tmclvalidator.topicmapslab.de/instance_1");

@@ -18,6 +18,8 @@ import java.util.Set;
 import org.junit.After;
 import org.junit.Before;
 import org.tmapi.core.Construct;
+import org.tmapi.core.Locator;
+import org.tmapi.core.Name;
 import org.tmapi.core.Topic;
 import org.tmapi.core.TopicMap;
 import org.tmapi.core.TopicMapSystem;
@@ -54,6 +56,26 @@ public abstract class AbstractTest {
 	
 	@After
     public void tearDown() throws Exception {
+		
+		if(this.results == null){
+			System.out.println("No Results");
+			return;
+		}
+		
+		if(this.results.isEmpty()){
+			System.out.println("No Results");
+			return;
+		}
+		
+		for(Map.Entry<Construct, Set<ValidationResult>> entry:this.results.entrySet()){
+			
+			System.out.println("Invalid construct: " + getBestName(entry.getKey()));
+			
+			for(ValidationResult r:entry.getValue()){
+				System.out.println(r.getMessage() + "(" + r.getConstraintId() + ")");
+			}
+			
+		}
 		
 	}
 	
@@ -119,6 +141,32 @@ public abstract class AbstractTest {
 
 		assertEquals(1, this.results.size());
 		assertTrue(this.results.keySet().iterator().next().equals(invalidTopic));
+	}
+	
+	private String getBestName(Construct construct) {
+
+		if(construct instanceof Topic){
+			
+			Set<Name> names = ((Topic)construct).getNames();
+
+			if (!names.isEmpty())
+				return names.iterator().next().getValue();
+			
+			Set<Locator> si = ((Topic)construct).getSubjectIdentifiers();
+			if (!si.isEmpty())
+				return si.iterator().next().getReference();
+
+			Set<Locator> sl = ((Topic)construct).getSubjectLocators();
+			if (!sl.isEmpty())
+				return sl.iterator().next().getReference();
+			
+		}
+
+		Set<Locator> ii = construct.getItemIdentifiers();
+		if (!ii.isEmpty())
+			return ii.iterator().next().getReference();
+
+		return construct.getId();
 	}
 	
 }

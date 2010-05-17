@@ -43,6 +43,9 @@ public class ScopeConstraintValidatorTest extends AbstractTest {
 	
 	private static String testMapFile_08 = "./src/test/resources/scope-constraint/test_case_08_map.ctm";
 	private static String testSchemaFile_08 = "./src/test/resources/scope-constraint/test_case_08_schema.ctm";
+	
+	private static String testMapFile_09 = "./src/test/resources/scope-constraint/test_case_09_map.ctm";
+	private static String testSchemaFile_09 = "./src/test/resources/scope-constraint/test_case_09_schema.ctm";
 
 	@Test
     public final void testCase01() throws Exception {
@@ -124,6 +127,13 @@ public class ScopeConstraintValidatorTest extends AbstractTest {
 				
 			}else assertNotNull(null);
 		}
+    }
+	
+	@Test
+    public final void testCase09() throws Exception {
+
+		this.results = runValidator(testMapFile_09, testSchemaFile_09);
+		assertEquals(0, this.results.size());
     }
 
 	

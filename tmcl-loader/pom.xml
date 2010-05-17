@@ -3,7 +3,7 @@
   <groupId>de.topicmapslab</groupId>
   <artifactId>tmcl-loader</artifactId>
   <name>TMCL Loader</name>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <repositories>
     <repository>
 	<id>tmlab</id>

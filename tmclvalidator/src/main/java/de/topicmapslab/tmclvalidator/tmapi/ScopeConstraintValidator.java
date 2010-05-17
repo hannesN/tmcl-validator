@@ -6,9 +6,6 @@
  */
 package de.topicmapslab.tmclvalidator.tmapi;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,7 +16,6 @@ import org.tmapi.core.Occurrence;
 import org.tmapi.core.Scoped;
 import org.tmapi.core.Topic;
 import org.tmapi.core.TopicMap;
-import org.tmapi.index.TypeInstanceIndex;
 
 import de.topicmapslab.tmclvalidator.TMCLValidatorException;
 import de.topicmapslab.tmclvalidator.ValidationResult;
@@ -47,114 +43,46 @@ public class ScopeConstraintValidator extends AbstractTMAPIValidator {
 	
 	public void validate(TopicMap mergedTopicMap, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException 
 	{
-		TypeInstanceIndex typeInstanceIndex = mergedTopicMap.getIndex(TypeInstanceIndex.class);
+		Map<IConstraint, Topic> constraintsAndTypes = getConstraintsAndTypes(mergedTopicMap, CONSTRAINT_STATEMENT, SCOPE_CONSTRAINT);
 		
-		// get constrained types and corresponding constraints
-		Map<Topic, Set<IConstraint> > typesAndConstraints = getConstructTypesAndConstraints(mergedTopicMap, CONSTRAINT_STATEMENT, SCOPE_CONSTRAINT);
-
-		for(Map.Entry<Topic, Set<IConstraint>> entry:typesAndConstraints.entrySet())
-		{
-			Collection<Scoped> scopedObjects = new HashSet<Scoped>();
+		for(Map.Entry<IConstraint, Topic> entry:constraintsAndTypes.entrySet()){
+		
+			Topic scopeType = ((ScopeConstraint)entry.getKey()).allowedScope;
+			int cardMin = ((ScopeConstraint)entry.getKey()).cardMin;
+			int cardMax = ((ScopeConstraint)entry.getKey()).cardMax;
 			
-			// get instances of scoped types
-			Collection<Association> associations = typeInstanceIndex.getAssociations(entry.getKey());
+			/// TODO draft says 'or' so use if else instead?
 			
-			if(!associations.isEmpty())
-			{
-				// check associations
-				for(Association association:associations)
-					scopedObjects.add(association);
-
-			}else{
-				// check occurrences
-				Collection<Occurrence> occurrences = typeInstanceIndex.getOccurrences(entry.getKey());
-				
-				if(!occurrences.isEmpty())
-				{
-					for(Occurrence occurrence:occurrences)
-						scopedObjects.add(occurrence);
-
-				}else{
-					// check names
-					Collection<Name> names = typeInstanceIndex.getNames(entry.getKey());
-					
-					if(!names.isEmpty())
-					{
-						for(Name name:names)
-							scopedObjects.add(name);
-					}else{
-						addInvalidConstruct(entry.getKey(), "The constrained topic type has no instances!", invalidConstructs); 
-					}
-				}
-			}
-			
-			// check instances
-			for(Scoped scopedObject:scopedObjects)
-			{
-				Set<Topic> scopeTopics = scopedObject.getScope();
-				
-				Map<ScopeConstraint, Integer> cardinalityCounter = new HashMap<ScopeConstraint, Integer>();
-				
-				for(Topic scopeTopic:scopeTopics)
-				{
-					boolean scopeTopicFound = false;
-					
-					for(IConstraint constraint:entry.getValue())
-					{
-						ScopeConstraint scope_constraint = (ScopeConstraint)constraint;
+			// check names
+			for(Name name:getNames(entry.getValue()))
+				checkScope(name, scopeType, cardMin, cardMax, invalidConstructs, "name");
 						
-						if(scopeTopic.getTypes().contains(scope_constraint.allowedScope))
-						{
-							scopeTopicFound = true;
-							
-							int count = 0;
-							if(cardinalityCounter.get(scope_constraint) != null) count = cardinalityCounter.get(scope_constraint);
-							count++;
-							cardinalityCounter.put(scope_constraint, count);
-						}
-					}
-					
-					if(!scopeTopicFound)
-					{
-						addInvalidConstruct(scopedObject, "Object has unallowed scope (" + getBestName(scopeTopic) + ")", invalidConstructs); 
-					}
-					
-				}
-
-				// check cardinality
-				checkCardinality(invalidConstructs, entry.getValue(), scopedObject, cardinalityCounter);
-			}
+			// check occurrences
+			for(Occurrence occurrence:getOccurrences(entry.getValue()))
+				checkScope(occurrence, scopeType, cardMin, cardMax, invalidConstructs, "occurrence");
+			
+			// check associations
+			for(Association association:getAssociations(entry.getValue()))
+				checkScope(association, scopeType, cardMin, cardMax, invalidConstructs, "association");
+			
 		}
 	}
 
-	/**
-	 * Checks the cardinality.
-	 * @param invalidConstructs - Set of invalid constructs.
-	 * @param constraints - Set of constraints.
-	 * @param scopedObject - The scoped object for which the cardinality is checked.
-	 * @param cardinalityCounter - The cardinalities.
-	 */
-    private void checkCardinality(Map<Construct, Set<ValidationResult>> invalidConstructs, Set<IConstraint> constraints, Scoped scopedObject, Map<ScopeConstraint, Integer> cardinalityCounter) throws TMCLValidatorException {
-	    
-    	for(IConstraint constraint:constraints)
-	    {
-	    	
-	    	ScopeConstraint scope_constraint = (ScopeConstraint)constraint;
-	    	
-	    	int count = 0;
-	    	if(cardinalityCounter.get(scope_constraint) != null) count = cardinalityCounter.get(scope_constraint);
-	    	
-	    	if(count < scope_constraint.cardMin)
-	    	{
-	    		addInvalidConstruct(scopedObject, "Object has too few scope topics of type " + getBestName(scope_constraint.allowedScope), invalidConstructs); 
-	    	}
-	    	
-	    	if(scope_constraint.cardMax != -1 && count > scope_constraint.cardMax)
-	    	{
-	    		addInvalidConstruct(scopedObject, "Object has too many scope topics of type " + getBestName(scope_constraint.allowedScope), invalidConstructs); 
-	    	}
-	    }
-    }
-	
+	private void checkScope(Scoped scopedObject, Topic scopeType, int cardMin, int cardMax, Map<Construct, Set<ValidationResult>> invalidConstructs, String name) throws TMCLValidatorException{
+		
+		Set<Topic> scope = scopedObject.getScope();
+		
+		int count = 0;
+		
+		for(Topic theme:scope)
+			if(theme.getTypes().contains(scopeType))
+				count++;
+		
+		if(cardMin > count)
+			addInvalidConstruct(scopedObject, "The scope of the " + name + " contains to few topics of type " + getBestName(scopeType) + " [" + count + " of min " + cardMin + "]", invalidConstructs);
+			
+		if(cardMax != -1 && cardMax < count)
+			addInvalidConstruct(scopedObject, "The scope of the " + name + " contains to many topics of type " + getBestName(scopeType) + " [" + count + " of max " + cardMin + "]", invalidConstructs);
+	}
 	
 }

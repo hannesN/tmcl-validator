@@ -18,7 +18,7 @@ import org.tmapix.io.CTMTopicMapReader;
  * 
  */
 public class TMCLLoader {
-
+	
 	public static void readTMCLSchema(TopicMap topicMap, String filename) throws Exception {
 		readTMCLSchema(topicMap, new File(filename));
 	}
@@ -28,8 +28,12 @@ public class TMCLLoader {
 	}
 
 	public static void readTMCLSchema(TopicMap topicMap, InputStream is) throws Exception {
+
 		InputStream templateStream = TMCLLoader.class.getClassLoader().getResourceAsStream("META-INF/templates.ctm");
 
+		if(templateStream == null)
+			throw new RuntimeException("Unable to open template definition.");
+		
 		StringBuffer template_prefixes = new StringBuffer();
 		StringBuffer template = new StringBuffer();
 		StringBuffer prefixes = new StringBuffer();

@@ -21,6 +21,7 @@ validator:name_type_1 isa tmcl:name-type.
 
 validator:topic_type_1 isa tmcl:topic-type;
 	requires-scope(validator:name_type_1, validator:scope_1, 1, 1);
+	requires-scope(validator:name_type_1, validator:scope_2, 0, 0);
 	requires-scope(validator:occurrences_type_1, validator:scope_2, 1, 1);
 	requires-scope(validator:occurrences_type_1, validator:scope_3, 1, 1).
 

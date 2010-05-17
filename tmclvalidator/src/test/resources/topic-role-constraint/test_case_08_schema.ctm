@@ -10,11 +10,14 @@
 
 # --[ SCHEMA ]----------------------------------------------------------------------------------------
 
-validator:name_type_1 isa tmcl:name-type .
-validator:name_type_2 isa tmcl:name-type .
-
 validator:topic_type_1 isa tmcl:topic-type;
-	has-name(validator:name_type_1, 1, 1) .
+	plays-role(validator:role_type_1, validator:association_type_1, 0, 1);
+	plays-role(validator:role_type_1, validator:association_type_2, 0, 1).
+
+validator:association_type_1 isa tmcl:association-type.
+validator:association_type_2 isa tmcl:association-type.
+
+validator:role_type_1 isa tmcl:role-type.
 
 
 

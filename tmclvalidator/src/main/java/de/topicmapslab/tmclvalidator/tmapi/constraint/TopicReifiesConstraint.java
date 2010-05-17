@@ -16,13 +16,13 @@ public class TopicReifiesConstraint extends AbstractCardinalityConstraint {
 
 	private static final String CONSTRAINT_STATEMENT = "http://psi.topicmaps.org/tmcl/constrained-statement";
 	
-	public Topic topicType;
+	public Topic statementType;
 	public int cardMin;
 	public int cardMax;
 	
 	public TopicReifiesConstraint()
 	{
-		this.topicType = null;
+		this.statementType = null;
 		this.cardMin = -1;
 		this.cardMax = -1;
 	}
@@ -33,11 +33,11 @@ public class TopicReifiesConstraint extends AbstractCardinalityConstraint {
 
 		try
 		{
-			topicType = Utils.getCounterPlayer(constraintInstance, map.getTopicBySubjectIdentifier(map.createLocator(CONSTRAINT_STATEMENT)));
+			statementType = Utils.getCounterPlayer(constraintInstance, map.getTopicBySubjectIdentifier(map.createLocator(CONSTRAINT_STATEMENT)));
 			
 		}catch (TMCLValidatorException e) {
 			
-			topicType = null;
+			statementType = null;
 		}
 		
 		this.cardMin = getMinCardinality(constraintInstance);

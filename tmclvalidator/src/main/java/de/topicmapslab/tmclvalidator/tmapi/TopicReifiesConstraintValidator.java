@@ -9,18 +9,17 @@ package de.topicmapslab.tmclvalidator.tmapi;
 import java.util.Map;
 import java.util.Set;
 
-import org.tmapi.core.Association;
 import org.tmapi.core.Construct;
-import org.tmapi.core.Name;
-import org.tmapi.core.Occurrence;
 import org.tmapi.core.Reifiable;
 import org.tmapi.core.Topic;
 import org.tmapi.core.TopicMap;
+import org.tmapi.core.Typed;
 
 import de.topicmapslab.tmclvalidator.TMCLValidatorException;
 import de.topicmapslab.tmclvalidator.ValidationResult;
 import de.topicmapslab.tmclvalidator.tmapi.constraint.IConstraint;
 import de.topicmapslab.tmclvalidator.tmapi.constraint.TopicReifiesConstraint;
+import de.topicmapslab.tmclvalidator.tmapi.utils.Utils;
 
 
 /**
@@ -42,72 +41,68 @@ public class TopicReifiesConstraintValidator extends AbstractTMAPIValidator {
 	
 	public void validate(TopicMap mergedTopicMap, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException 
 	{
-
-		Map<Topic, Set<IConstraint> > topicAndConstraints = getTopicsAndConstraints(mergedTopicMap, CONSTRAINED_TOPIC_TYPE, TOPIC_REIFIER_CONSTRAINT);
-
-		for(Map.Entry<Topic, Set<IConstraint>> entry:topicAndConstraints.entrySet())
+		
+		Map<Topic, Set<IConstraint> > typesAndConstraints = getConstructTypesAndConstraints(mergedTopicMap, CONSTRAINED_TOPIC_TYPE, TOPIC_REIFIER_CONSTRAINT);
+		
+		for(Map.Entry<Topic, Set<IConstraint>> entry:typesAndConstraints.entrySet())
 		{
-			Topic reifyingTopic = entry.getKey();
+			for(Topic reifyingTopic:getTopics(entry.getKey())){
 
-			// get reifierd topic
-			Reifiable reifiedObject = reifyingTopic.getReified();
-
-			// get type
-			Topic type = null;
-			
-			if(reifiedObject != null)
-			{
-				if(reifiedObject instanceof Name)
-					type = ((Name) reifiedObject).getType();
-					
-				if(reifiedObject instanceof Occurrence)
-					type = ((Occurrence) reifiedObject).getType();
-
-				if(reifiedObject instanceof Association)
-					type = ((Association) reifiedObject).getType();
-
-				if(type == null)
-					throw new TMCLValidatorException("Reified topic is not a Name, a Occurrence or a Association.");
-
-			}
-			
-			boolean reifiedObjectFound = false;
-			
-			for(IConstraint constraint:entry.getValue())
-			{
-				TopicReifiesConstraint topic_reifies_constraint = (TopicReifiesConstraint)constraint;
+				// get reifierd topic
+				Reifiable reifiedObject = reifyingTopic.getReified();
+	
+				// get type
+				Topic type = null;
 				
-				// cannot reify constraint
-				if(topic_reifies_constraint.cardMin == 0 && topic_reifies_constraint.cardMax == 0 && reifiedObject != null)
+				if(reifiedObject != null)
 				{
-					addInvalidConstruct(reifyingTopic, "Topic is reifier of (" + reifiedObject + ") but is not allowed to be a reifier.", invalidConstructs);
 					
-				}else{
-					
-					// must reify constraint
-					if(topic_reifies_constraint.cardMin == 1 && topic_reifies_constraint.cardMax == 1)
-					{
-						if(reifiedObject == null)
-						{
-							addInvalidConstruct(reifyingTopic, "Topic musst reify an object of type " + getBestName(topic_reifies_constraint.topicType), invalidConstructs);
-						}
-						
-						else if(!type.equals(topic_reifies_constraint.topicType))
-						{
-							addInvalidConstruct(reifyingTopic, "Topic musst reify an object of type " + getBestName(topic_reifies_constraint.topicType), invalidConstructs);
-						}
+					if(!(reifiedObject instanceof Typed)){
+						addInvalidConstruct(reifyingTopic, "Reified object is not 'typed'", invalidConstructs);
+						continue;
 					}
 					
-					if(reifiedObject != null && type.equals(topic_reifies_constraint.topicType))
-						reifiedObjectFound = true;
+					type = ((Typed)reifiedObject).getType();
+				}
+				
+				boolean reifiedObjectFound = false;
+				
+				for(IConstraint constraint:entry.getValue())
+				{
+					TopicReifiesConstraint topic_reifies_constraint = (TopicReifiesConstraint)constraint;
+					
+					// cannot reify constraint
+					if(topic_reifies_constraint.cardMax == 0 && reifiedObject != null)
+					{
+						addInvalidConstruct(reifyingTopic, "Topics of type " + getBestName(entry.getKey()) + " are not allowed to reify.", invalidConstructs);
+						
+					}else{
+						
+						// must reify constraint
+						if(topic_reifies_constraint.cardMin == 1)
+						{
+							if(reifiedObject == null)
+							{
+								addInvalidConstruct(reifyingTopic, "Topic musst reify an object of type " + getBestName(topic_reifies_constraint.statementType), invalidConstructs);
+								
+							}else if(!Utils.hasType((Typed)reifiedObject, topic_reifies_constraint.statementType))
+							{
+								addInvalidConstruct(reifyingTopic, "The construct reified by the topic musst be of type " + getBestName(topic_reifies_constraint.statementType), invalidConstructs);
+							}
+						}
+						
+						if(reifiedObject != null && type.equals(topic_reifies_constraint.statementType))
+							reifiedObjectFound = true;
+					}
+				}
+	
+				if(reifiedObject != null && !reifiedObjectFound)
+				{
+					addInvalidConstruct(reifyingTopic, "Topic reifies a construct of an unallowed type (" + getBestName(((Typed)reifiedObject).getType()) + ").", invalidConstructs);
 				}
 			}
-
-			if(reifiedObject != null && !reifiedObjectFound)
-			{
-				addInvalidConstruct(reifyingTopic, "Topic reifies an unallowed object (" + reifiedObject + ").", invalidConstructs);
-			}
 		}
+		
 	}
 	
 	

@@ -26,6 +26,7 @@ validator:timeframe_1 isa validator:timeframe .
 validator:german isa validator:language .
 
 validator:parent_1 isa validator:parent .
+validator:parent_2 isa validator:parent .
 
 validator:person_1 isa validator:person;
 	- validator:given_name: "Person";

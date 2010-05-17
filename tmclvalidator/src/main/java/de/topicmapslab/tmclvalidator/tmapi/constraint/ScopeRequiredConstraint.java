@@ -14,7 +14,7 @@ import de.topicmapslab.tmclvalidator.tmapi.utils.Utils;
 
 public class ScopeRequiredConstraint extends AbstractCardinalityConstraint {
 
-	private static final String REQUIRED_SCOPE = "http://psi.topicmaps.org/tmcl/required-scope";
+	private static final String CONSTRAINED_SCOPE_TOPIC = "http://psi.topicmaps.org/tmcl/constrained-scope-topic";
 	private static final String CONSTRAINT_STATEMENT = "http://psi.topicmaps.org/tmcl/constrained-statement";
 	
 	public Topic caracteristicType; // i.e. Occurrence type or Name type
@@ -34,7 +34,7 @@ public class ScopeRequiredConstraint extends AbstractCardinalityConstraint {
 		TopicMap map = constraintInstance.getTopicMap();
 
 		this.caracteristicType = Utils.getCounterPlayer(constraintInstance, map.getTopicBySubjectIdentifier(map.createLocator(CONSTRAINT_STATEMENT)));
-		this.scopeInstance = Utils.getCounterPlayer(constraintInstance, map.getTopicBySubjectIdentifier(map.createLocator(REQUIRED_SCOPE)));
+		this.scopeInstance = Utils.getCounterPlayer(constraintInstance, map.getTopicBySubjectIdentifier(map.createLocator(CONSTRAINED_SCOPE_TOPIC)));
 		
 		this.cardMin = getMinCardinality(constraintInstance);
 		this.cardMax = getMaxCardinality(constraintInstance);

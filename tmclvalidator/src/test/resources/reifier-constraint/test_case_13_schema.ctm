@@ -1,0 +1,29 @@
+%encoding "utf-8"
+%version 1.0
+
+# --[ Prefixes ]--------------------------------------------------------------------------------------
+
+%prefix tmcl <http://psi.topicmaps.org/tmcl/>
+%prefix tmdm <http://psi.topicmaps.org/iso13250/model/>
+
+%prefix validator <http://tmclvalidator.topicmapslab.de/>
+
+validator:needs_reifier
+	must-have-reifier(validator:reifier).
+	
+validator:association_type isa tmcl:association-type;
+	ako validator:needs_reifier;
+	- "Association Type".
+	
+validator:name_type isa tmcl:name-type;
+	ako validator:needs_reifier;
+	- "Name Type".
+
+validator:occurrence_type isa tmcl:occurrence-type;
+	ako validator:needs_reifier;
+	- "Occurrence Type".
+	
+validator:reifier isa tmcl:topic-type.
+
+validator:role_type isa tmcl:role-type .
+

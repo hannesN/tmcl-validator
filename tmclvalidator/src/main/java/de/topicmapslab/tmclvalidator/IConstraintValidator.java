@@ -16,7 +16,7 @@ import org.tmapi.core.TopicMap;
 /**
  * Interface of an validator class.
  */
-public interface IConstraintValidator {
+public interface IConstraintValidator{
 
 	/**
 	 * Validates a topic map which is merged with the used schema.

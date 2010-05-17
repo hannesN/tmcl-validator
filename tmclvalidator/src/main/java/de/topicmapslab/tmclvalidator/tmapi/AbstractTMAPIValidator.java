@@ -15,9 +15,12 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tmapi.core.Association;
 import org.tmapi.core.Construct;
 import org.tmapi.core.Locator;
 import org.tmapi.core.Name;
+import org.tmapi.core.Occurrence;
+import org.tmapi.core.Role;
 import org.tmapi.core.Topic;
 import org.tmapi.core.TopicMap;
 import org.tmapi.index.TypeInstanceIndex;
@@ -76,6 +79,9 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 	private static final String UNIQUE_VALUE_CONSTRAINT = "http://psi.topicmaps.org/tmcl/unique-value-constraint";
 	private static final String REGULAR_EXPRESSION_CONSTRAINT = "http://psi.topicmaps.org/tmcl/regular-expression-constraint";
 
+	private Topic supertype_subtype;
+	
+	
 	/**
 	 * Constructor
 	 * @param id - The validator ID.
@@ -103,6 +109,222 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 
 	}
 
+    protected Map<IConstraint, Topic> getConstraintsAndTypes(TopicMap topicMap, String associationTypeSubjectLocator, String constraintTypeSubjectLocator) throws TMCLValidatorException{
+    	
+    	Topic associationType = topicMap.getTopicBySubjectIdentifier(topicMap.createLocator(associationTypeSubjectLocator));
+    	Topic constraintType = topicMap.getTopicBySubjectIdentifier(topicMap.createLocator(constraintTypeSubjectLocator));
+    	
+    	if (associationType == null)
+			throw new TMCLValidatorException("Construct statement type is null.");
+		
+		if (constraintType == null)
+			throw new TMCLValidatorException("Constraint type is null.");
+    	
+		// get type instance index
+		TypeInstanceIndex typeInstanceIndex = constraintType.getTopicMap().getIndex(TypeInstanceIndex.class);
+		
+		// get constraint instances
+		Collection<Topic> constraints = typeInstanceIndex.getTopics(constraintType);
+		
+		// create result map
+		
+		Map<IConstraint, Topic> result = new HashMap<IConstraint, Topic>();
+		
+		for (Topic constraint : constraints) {
+			// create constraint//-
+			IConstraint newConstraint = getConstraint(constraintType);
+
+			// get constraint parameter
+			newConstraint.getParameter(constraint);
+
+			// get statement
+			Topic constrainedType = Utils.getCounterPlayer(constraint, associationType);
+
+			result.put(newConstraint, constrainedType);
+		}
+		
+		
+    	return result;
+    }
+    
+    
+    protected Set<Occurrence> getOccurrences(Topic type){
+    	
+    	Set<Occurrence> result = new HashSet<Occurrence>();
+    	Set<Topic> transientTypes = getTransientTypes(type);
+    	
+    	TypeInstanceIndex typeInstanceIndex = type.getTopicMap().getIndex(TypeInstanceIndex.class);
+    	
+    	for(Topic transientType:transientTypes){
+    		
+    		Collection<Occurrence> occurrences = typeInstanceIndex.getOccurrences(transientType);
+    		result.addAll(occurrences);
+    	}
+  	
+    	return result;
+    }
+    
+    protected Set<Name> getNames(Topic type){
+    	
+    	Set<Name> result = new HashSet<Name>();
+    	Set<Topic> transientTypes = getTransientTypes(type);
+    	
+    	TypeInstanceIndex typeInstanceIndex = type.getTopicMap().getIndex(TypeInstanceIndex.class);
+    	
+    	for(Topic transientType:transientTypes){
+    		
+    		Collection<Name> names = typeInstanceIndex.getNames(transientType);
+    		result.addAll(names);
+    	}
+  	
+    	return result;
+    }
+    
+    protected Set<Association> getAssociations(Topic type){
+    	
+    	Set<Association> result = new HashSet<Association>();
+    	Set<Topic> transientTypes = getTransientTypes(type);
+    	
+    	TypeInstanceIndex typeInstanceIndex = type.getTopicMap().getIndex(TypeInstanceIndex.class);
+    	
+    	for(Topic transientType:transientTypes){
+    		
+    		Collection<Association> associations = typeInstanceIndex.getAssociations(transientType);
+    		result.addAll(associations);
+    	}
+    	
+    	return result;
+    }
+    
+    protected Set<Topic> getTopics(Topic type){
+    	
+    	Set<Topic> result = new HashSet<Topic>();
+    	Set<Topic> transientTypes = getTransientTypes(type);
+    	
+    	TypeInstanceIndex typeInstanceIndex = type.getTopicMap().getIndex(TypeInstanceIndex.class);
+    	
+    	for(Topic transientType:transientTypes){
+    		
+    		Collection<Topic> topics = typeInstanceIndex.getTopics(transientType);
+    		result.addAll(topics);
+    	}
+    	
+    	return result;
+    	
+    }
+    
+    protected Set<Name> getTopicNames(Topic topic, Topic type){
+		
+		Set<Name> names = topic.getNames();
+		Set<Name> result = new HashSet<Name>();
+		
+		for(Name n:names)
+			if(Utils.hasType(n, type))
+				result.add(n);
+		
+		return result;
+	}
+	
+	protected Set<Occurrence> getTopicOccurrences(Topic topic, Topic type){
+	
+		Set<Occurrence> occurrences = topic.getOccurrences();
+		Set<Occurrence> result = new HashSet<Occurrence>();
+		
+		for(Occurrence o:occurrences)
+			if(Utils.hasType(o, type))
+				result.add(o);
+		
+		return result;
+	}
+	
+	protected Set<Role> getTopicRoles(Topic topic, Topic type){
+		
+		Set<Role> roles = topic.getRolesPlayed();
+		Set<Role> result = new HashSet<Role>();
+		
+		for(Role r:roles)
+			if(Utils.hasType(r, type))
+				result.add(r);
+		
+		return result;
+	}
+	
+	protected Set<Role> getTopicRolesByAssociationType(Topic topic, Topic roleType, Topic associationType){
+		
+		Set<Role> roles = getTopicRoles(topic, roleType);
+		Set<Role> result = new HashSet<Role>();
+		
+		for(Role r:roles)
+			if(Utils.hasType(r.getParent(), associationType))
+				result.add(r);
+		
+		return result;
+	}
+	
+	protected Set<Association> getTopicAssociations(Topic topic, Topic type){
+
+		Set<Association> all = new HashSet<Association>();
+		Set<Association> result = new HashSet<Association>();
+		
+		for(Role r:topic.getRolesPlayed())
+			all.add(r.getParent());
+		
+		for(Association a:all)
+			if(Utils.hasType(a, type))
+				result.add(a);
+		
+		return result;
+		
+	}
+    
+    
+    /**
+     * Returns all subtypes for the specific supertype, the supertype included, i.e. the whole hierarchy
+     * @param superType
+     * @return
+     */
+    private Set<Topic> getTransientTypes(Topic superType){
+    	
+    	Set<Topic> transientTypes = new HashSet<Topic>();
+    	Set<Topic> allreadyCheckedTypes = new HashSet<Topic>();
+    	
+    	getAllSubtypes(superType, transientTypes, allreadyCheckedTypes);
+    	
+    	return transientTypes;
+    }
+    
+    private void getAllSubtypes(Topic superType, Set<Topic> subTypes, Set<Topic> allreadyCheckedTypes){
+    	
+    	subTypes.add(superType); // add this type
+    	
+    	if(allreadyCheckedTypes.contains(superType)) // return if already checked
+    		return;
+    	    	
+    	allreadyCheckedTypes.add(superType);
+    	
+    	Set<Topic> subtypes = getSubtypes(superType);
+    	
+    	for(Topic subtype:subtypes)
+    		if(!allreadyCheckedTypes.contains(subtype))
+    			getAllSubtypes(subtype, subTypes, allreadyCheckedTypes);
+    	
+    	
+    }
+    
+    @SuppressWarnings("unchecked")
+    private Set<Topic> getSubtypes(Topic superType){
+
+    	if(this.supertype_subtype == null)
+    		this.supertype_subtype = superType.getTopicMap().getTopicBySubjectIdentifier(superType.getTopicMap().createLocator("http://psi.topicmaps.org/iso13250/model/supertype-subtype"));
+    	
+    	if(this.supertype_subtype == null)
+    		return Collections.EMPTY_SET;
+    	
+    	return Utils.getCounterPlayers(superType, this.supertype_subtype);
+
+    }
+    
+    
 	/**
 	 * Creates a set of constrained topic map constructs and the corresponding constraints.
 	 * @param topicMap - The topic map which should be evaluated.
@@ -111,7 +333,7 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 	 * @return A map of types and the corresponding constraints.
 	 * @throws TMCLValidatorException
 	 */
-	protected Map<Topic, Set<IConstraint> > getConstructTypesAndConstraints(TopicMap topicMap, String associationTypeSubjectLocator, String constraintTypeSubjectLocator) throws TMCLValidatorException {
+    protected Map<Topic, Set<IConstraint> > getConstructTypesAndConstraints(TopicMap topicMap, String associationTypeSubjectLocator, String constraintTypeSubjectLocator) throws TMCLValidatorException {
 
 		Map<Topic, Set<IConstraint> > result = new HashMap<Topic, Set<IConstraint>>();
 		
@@ -155,7 +377,8 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 	 * @return A map of topics and the corresponding constraints.
 	 * @throws TMCLValidatorException
 	 */
-	protected Map<Topic, Set<IConstraint> >  getTopicsAndConstraints(TopicMap topicMap, String associationTypeSubjectLocator, String constraintTypeSubjectLocator) throws TMCLValidatorException{
+    @Deprecated
+    protected Map<Topic, Set<IConstraint> >  getTopicsAndConstraints(TopicMap topicMap, String associationTypeSubjectLocator, String constraintTypeSubjectLocator) throws TMCLValidatorException{
 		
 		Map<Topic, Set<IConstraint> >  result = new HashMap<Topic, Set<IConstraint>>();
 		
@@ -189,6 +412,7 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 	 * @param types - The set of topic types.
 	 * @return A set of topics.
 	 */
+    @Deprecated
     private Set<Topic> getAllTopics(TopicMap mergedTopicMap, Set<Topic> types){
 
     	

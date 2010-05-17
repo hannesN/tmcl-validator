@@ -6,7 +6,6 @@
  */
 package de.topicmapslab.tmclvalidator.tmapi;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,7 +14,6 @@ import org.tmapi.core.Name;
 import org.tmapi.core.Occurrence;
 import org.tmapi.core.Topic;
 import org.tmapi.core.TopicMap;
-import org.tmapi.index.TypeInstanceIndex;
 
 import de.topicmapslab.tmclvalidator.TMCLValidatorException;
 import de.topicmapslab.tmclvalidator.ValidationResult;
@@ -41,35 +39,26 @@ public class RegularExpressionConstraintValidator extends AbstractTMAPIValidator
 	
 	public void validate(TopicMap mergedTopicMap, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException 
 	{
-		TypeInstanceIndex typeInstanceIndex = mergedTopicMap.getIndex(TypeInstanceIndex.class);
+		Map<IConstraint,Topic> constraintsAndTypes = getConstraintsAndTypes(mergedTopicMap, CONSTRAINT_STATEMENT, REGULAR_EXPRESSION_CONSTRAINT);
 		
-		// get constrained types and corresponding constraints
-		Map<Topic, Set<IConstraint> > typesAndConstraints = getConstructTypesAndConstraints(mergedTopicMap, CONSTRAINT_STATEMENT, REGULAR_EXPRESSION_CONSTRAINT);
-		
-		for(Map.Entry<Topic, Set<IConstraint>> entry:typesAndConstraints.entrySet())
-		{
+		for(Map.Entry<IConstraint, Topic> entry:constraintsAndTypes.entrySet()){
 			
-			if(entry.getValue().size() > 1) throw new TMCLValidatorException("Type " + getBestName(entry.getKey()) + " has more then one regular expression constraints.");
+			String regEx = ((RegularExpressionConstraint)entry.getKey()).regExp;
 			
-			// get constraint
-			RegularExpressionConstraint constraint = (RegularExpressionConstraint)entry.getValue().iterator().next();
+			// check names
+			Set<Name> names = getNames(entry.getValue());
+			
+			for(Name name:names){
+				if(!name.getValue().matches(regEx))
+					addInvalidConstruct(name, "Name '" + name.getValue() + "' doesn't macht the reqular expression '" + regEx + "'.", invalidConstructs);
+			}
 			
 			// check occurrences
-			Collection<Occurrence> occurrences = typeInstanceIndex.getOccurrences(entry.getKey());
+			Set<Occurrence> occurrences = getOccurrences(entry.getValue());
 			
-			for(Occurrence occurrence:occurrences)
-			{
-				if(!occurrence.getValue().matches(constraint.regExp))
-					addInvalidConstruct(occurrence, "Occurrence doesn't macht the reqular expression '" + constraint.regExp + "'.", invalidConstructs);
-			}
-
-			// check names
-			Collection<Name> names = typeInstanceIndex.getNames(entry.getKey());
-			
-			for(Name name:names)
-			{
-				if(!name.getValue().matches(constraint.regExp))
-					addInvalidConstruct(name, "Name '" + name.getValue() + "' doesn't macht the reqular expression '" + constraint.regExp + "'.", invalidConstructs);
+			for(Occurrence occurrence:occurrences){
+				if(!occurrence.getValue().matches(regEx))
+					addInvalidConstruct(occurrence, "Occurrence doesn't macht the reqular expression '" + regEx + "'.", invalidConstructs);
 			}
 		}
 	}

@@ -24,7 +24,7 @@ public class ToyTest extends AbstractTest {
 	private static String testMapFile_02 = "./src/test/resources/toy-test/toyTM.xtm";
 	private static String testSchemaFile_02 = "./src/test/resources/toy-test/toytm_schema_with_schema_infos.xtm";
 	
-	@Test
+	//@Test
     public final void testCase01() throws Exception {
 
 		TopicMapSystemFactory factory = TopicMapSystemFactory.newInstance();
@@ -48,7 +48,7 @@ public class ToyTest extends AbstractTest {
 				
     }
 	
-	@Test
+	//@Test
     public final void testCase02() throws Exception {
 
 		TopicMapSystemFactory factory = TopicMapSystemFactory.newInstance();

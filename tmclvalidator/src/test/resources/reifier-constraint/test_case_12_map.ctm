@@ -1,0 +1,23 @@
+%encoding "utf-8"
+%version 1.0
+
+# --[ Prefixes ]--------------------------------------------------------------------------------------
+
+%prefix tmcl <http://psi.topicmaps.org/tmcl/>
+%prefix tmdm <http://psi.topicmaps.org/iso13250/model/>
+
+%prefix validator <http://tmclvalidator.topicmapslab.de/>
+
+validator:ref1 isa validator:reifier;
+	- "Reifier 1".
+	
+validator:ref2 isa validator:reifier;
+	- "Reifier 2".
+
+validator:test
+	- validator:name_type: "Invalid Name" ~validator:ref1;
+	validator:occurrence_type: "Invalid Occurrence".
+	
+validator:association_type(validator:role_type: validator:test) ~validator:ref2
+
+

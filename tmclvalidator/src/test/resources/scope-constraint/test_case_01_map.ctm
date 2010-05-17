@@ -8,9 +8,6 @@
 
 %prefix validator <http://tmclvalidator.topicmapslab.de/>
 
-
-
-
 validator:given_name isa tmcl:name-type.
 
 # --[ topic types ]-----------------------------------------------------------------------------------

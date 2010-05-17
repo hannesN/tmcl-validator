@@ -6,8 +6,6 @@
  */
 package de.topicmapslab.tmclvalidator.tmapi;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,7 +14,6 @@ import org.tmapi.core.Construct;
 import org.tmapi.core.Role;
 import org.tmapi.core.Topic;
 import org.tmapi.core.TopicMap;
-import org.tmapi.index.TypeInstanceIndex;
 
 import de.topicmapslab.tmclvalidator.TMCLValidatorException;
 import de.topicmapslab.tmclvalidator.ValidationResult;
@@ -44,79 +41,29 @@ public class AssociationRoleConstraintValidator extends AbstractTMAPIValidator {
 	
 	public void validate(TopicMap mergedTopicMap, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException 
 	{
-		TypeInstanceIndex typeInstanceIndex = mergedTopicMap.getIndex(TypeInstanceIndex.class);
-		
-		// get constrained types and corresponding constraints
-		Map<Topic, Set<IConstraint> > typesAndConstraints = getConstructTypesAndConstraints(mergedTopicMap, CONSTRAINT_STATEMENT, ASSOCIATION_ROLE_CONSTRAINT);
-
-		for(Map.Entry<Topic, Set<IConstraint>> entry:typesAndConstraints.entrySet())
-		{
+		Map<IConstraint,Topic> constraintsAndTypes = getConstraintsAndTypes(mergedTopicMap, CONSTRAINT_STATEMENT, ASSOCIATION_ROLE_CONSTRAINT);
+				
+		for(Map.Entry<IConstraint, Topic> entry:constraintsAndTypes.entrySet()){
 			
-			Collection<Association> associationInstances = typeInstanceIndex.getAssociations(entry.getKey());
+			// get association of that type
+			Set<Association> associations = getAssociations(entry.getValue());
 			
-			for(Association associationInstance:associationInstances)
-			{
-				Set<Role> roles = associationInstance.getRoles();
+			Topic roleType = ((AssociationRoleConstraint)entry.getKey()).roleType;
+			int cardMin = ((AssociationRoleConstraint)entry.getKey()).cardMin;
+			int cardMax = ((AssociationRoleConstraint)entry.getKey()).cardMax;
+			
+			for(Association association:associations){
 				
-				Map<AssociationRoleConstraint, Integer> cardinalityCounter = new HashMap<AssociationRoleConstraint, Integer>();
-				
-				for(Role role:roles)
-				{
-				
-					boolean roleFound = false;
-					
-					for(IConstraint constraint:entry.getValue())
-					{
-						AssociationRoleConstraint association_role_constraint = (AssociationRoleConstraint)constraint;
-						
-						if(role.getType().equals(association_role_constraint.roleType))
-						{
-							roleFound = true;
-							// increate cardinality counter
-							int count = 0;
-							if(cardinalityCounter.get(constraint) != null) count = cardinalityCounter.get(constraint);
-							count++;
-							cardinalityCounter.put(association_role_constraint, count);
-						}
-					}
-					
-					if(!roleFound)
-						addInvalidConstruct(associationInstance, "Association has an unexspected role type (" + getBestName(role.getType()) + ")", invalidConstructs);
+				Set<Role> roles = association.getRoles(roleType);
 
-				}
+				if(cardMin > roles.size())
+					addInvalidConstruct(association, "The association has too few roles of type " + getBestName(roleType) + " [" + roles.size() + " of min " + cardMin + "]", invalidConstructs);
 				
-				// check cardinality
-				checkCardinality(invalidConstructs, entry.getValue(), associationInstance, cardinalityCounter);
+				if(cardMax != -1 && cardMax < roles.size())
+					addInvalidConstruct(association, "The association has too many roles of type " + getBestName(roleType) + " [" + roles.size() + " of max " + cardMin + "]", invalidConstructs);
+				
 			}
 		}
 	}
-
-	/**
-	 * Checks the cardinality.
-	 * @param invalidConstructs - Set of invalid constructs.
-	 * @param constraints - Set of constraint wrapper.
-	 * @param associationInstance - The association instance for witch the cardinallity is checked.
-	 * @param cardinalityCounter - The cardinalities.
-	 */
-    private void checkCardinality(Map<Construct, Set<ValidationResult>> invalidConstructs, Set<IConstraint> constraints, Association associationInstance, Map<AssociationRoleConstraint, Integer> cardinalityCounter) throws TMCLValidatorException {
-	    
-    	for(IConstraint constraint:constraints)
-	    {
-	    	AssociationRoleConstraint association_role_constraint = (AssociationRoleConstraint)constraint;
-	    	
-	    	int numRoles = 0;
-	    	if(cardinalityCounter.get(constraint) != null) numRoles = cardinalityCounter.get(constraint);
-	    	
-	    	if(numRoles < association_role_constraint.cardMin)
-	    	{
-	    		addInvalidConstruct(associationInstance, "Number of roles of type " + getBestName(association_role_constraint.roleType) + " [" + numRoles + "] is less then the specified minimum [" + association_role_constraint.cardMin + "]", invalidConstructs);
-	    	}
-	    	
-	    	if(association_role_constraint.cardMax != -1 && numRoles > association_role_constraint.cardMax)
-	    	{
-	    		addInvalidConstruct(associationInstance, "Number of roles of type " + getBestName(association_role_constraint.roleType) + " [" + numRoles + "] is bigger then the specified maximum [" + association_role_constraint.cardMax + "]", invalidConstructs);
-	    	}
-	    }
-    }
 	
 }

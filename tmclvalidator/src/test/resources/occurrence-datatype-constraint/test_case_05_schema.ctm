@@ -6,14 +6,23 @@
 %prefix tmcl <http://psi.topicmaps.org/tmcl/>
 %prefix tmdm <http://psi.topicmaps.org/iso13250/model/>
 %prefix xsd <http://www.w3.org/2001/XMLSchema#>
+
 %prefix validator <http://tmclvalidator.topicmapslab.de/>
 
 # --[ occurrence types ]------------------------------------------------------------------------------   
     
-validator:population isa tmcl:occurrence-type;
-	- "Population";
+validator:countable isa tmcl:occurrence-type;
+	- "Countable";
 	has-datatype(xsd:integer).
+    
+validator:population ako validator:countable;
+	- "Population".
+	
+validator:age ako validator:countable;
+	- "Age".
 	
 validator:website isa tmcl:occurrence-type;
 	- "Website";
-	has-datatype(xsd:anyURI). 
+	has-datatype(xsd:anyURI).    
+	
+

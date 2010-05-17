@@ -21,6 +21,11 @@ public class RegularExpressionConstraintValidatorTest extends AbstractTest {
 	private static String testMapFile_03 = "./src/test/resources/regular-expression-constraint/test_case_03_map.ctm";
 	private static String testSchemaFile_03 = "./src/test/resources/regular-expression-constraint/test_case_03_schema.ctm";
 	
+	private static String testMapFile_04 = "./src/test/resources/regular-expression-constraint/test_case_04_map.ctm";
+	private static String testSchemaFile_04 = "./src/test/resources/regular-expression-constraint/test_case_04_schema.ctm";
+	
+	private static String testMapFile_05 = "./src/test/resources/regular-expression-constraint/test_case_05_map.ctm";
+	private static String testSchemaFile_05 = "./src/test/resources/regular-expression-constraint/test_case_05_schema.ctm";
 	
 	@Test
     public final void testCase01() throws Exception {
@@ -40,4 +45,17 @@ public class RegularExpressionConstraintValidatorTest extends AbstractTest {
 
 		checkNumberAndType(testMapFile_03, testSchemaFile_03, 1, "http://tmclvalidator.topicmapslab.de/email");
     }
+	
+	@Test
+    public final void testCase04() throws Exception {
+
+		checkNumberAndType(testMapFile_04, testSchemaFile_04, 1, "http://tmclvalidator.topicmapslab.de/email");
+    }
+	
+	@Test
+    public final void testCase05() throws Exception {
+
+		checkNumberAndType(testMapFile_05, testSchemaFile_05, 1, "http://tmclvalidator.topicmapslab.de/username");
+    }
+	
 }

@@ -6,7 +6,6 @@
  */
 package de.topicmapslab.tmclvalidator.tmapi;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,7 +14,6 @@ import org.tmapi.core.Construct;
 import org.tmapi.core.Role;
 import org.tmapi.core.Topic;
 import org.tmapi.core.TopicMap;
-import org.tmapi.index.TypeInstanceIndex;
 
 import de.topicmapslab.tmclvalidator.TMCLValidatorException;
 import de.topicmapslab.tmclvalidator.ValidationResult;
@@ -38,17 +36,15 @@ public class RoleCombinationConstraintValidator extends AbstractTMAPIValidator {
 	public RoleCombinationConstraintValidator(String id, boolean useIdentifierInMessages) {
 	    super(id, useIdentifierInMessages);
     }
-
 	
 	public void validate(TopicMap mergedTopicMap, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException {
-		TypeInstanceIndex typeInstanceIndex = mergedTopicMap.getIndex(TypeInstanceIndex.class);
-
+		
 		// get constrained types and corresponding constraints
 		Map<Topic, Set<IConstraint> > typesAndConstraints = getConstructTypesAndConstraints(mergedTopicMap, CONSTRAINT_STATEMENT, ROLE_COMBINATION_CONSTRAINT);
 
 		for (Map.Entry<Topic, Set<IConstraint>> entry : typesAndConstraints.entrySet()) {
 
-			Collection<Association> associationInstances = typeInstanceIndex.getAssociations(entry.getKey());
+			Set<Association> associationInstances = getAssociations(entry.getKey());
 
 			for (Association associationInstance : associationInstances) {
 				

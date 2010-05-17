@@ -33,6 +33,9 @@ public class TopicRoleConstraintsValidatorTest extends AbstractTest {
 	private static String testMapFile_07 = "./src/test/resources/topic-role-constraint/test_case_07_map.ctm";
 	private static String testSchemaFile_07 = "./src/test/resources/topic-role-constraint/test_case_07_schema.ctm";
 	
+	private static String testMapFile_08 = "./src/test/resources/topic-role-constraint/test_case_08_map.ctm";
+	private static String testSchemaFile_08 = "./src/test/resources/topic-role-constraint/test_case_08_schema.ctm";
+	
 	@Test
     public final void testCase01() throws Exception {
 
@@ -77,6 +80,13 @@ public class TopicRoleConstraintsValidatorTest extends AbstractTest {
     public final void testCase07() throws Exception {
 
 		this.results = runValidator(testMapFile_07, testSchemaFile_07);
+		assertEquals(0, this.results.size());
+    }
+	
+	@Test // may play a specific role in two kinds of associations
+    public final void testCase08() throws Exception {
+
+		this.results = runValidator(testMapFile_08, testSchemaFile_08);
 		assertEquals(0, this.results.size());
     }
 	

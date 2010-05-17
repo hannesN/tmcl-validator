@@ -8,10 +8,12 @@
 
 %prefix validator <http://tmclvalidator.topicmapslab.de/>
 
-# --[ MAP ]-------------------------------------------------------------------------------------------
+validator:th1 isa tmcl:topic-type;
+	 overlaps(validator:th2).
+	 
+validator:th2 isa tmcl:topic-type .
+		
+validator:occurrence-type isa tmcl:occurrence-type;
+	has-scope(validator:th1,1,1);
+	has-scope(validator:th2,1,1).
 
-validator:instance_1 isa validator:topic_type_1;
-	validator:occurrence_type_1: "Occurrence 1";
-	validator:occurrence_type_2: "Occurrence 2".
-
-	

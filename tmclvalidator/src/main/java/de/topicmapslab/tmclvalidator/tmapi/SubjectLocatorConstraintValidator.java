@@ -39,40 +39,28 @@ public class SubjectLocatorConstraintValidator  extends AbstractTMAPIValidator {
 	
 	public void validate(TopicMap mergedTopicMap, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException
 	{
-		Map<Topic, Set<IConstraint> > topicAndConstraints = getTopicsAndConstraints(mergedTopicMap, CONSTRAINED_TOPIC_TYPE, SUBJECT_LOCATOR_CONSTRAINT);
+		Map<IConstraint, Topic> constraintsAndTypes = getConstraintsAndTypes(mergedTopicMap, CONSTRAINED_TOPIC_TYPE, SUBJECT_LOCATOR_CONSTRAINT);
 		
-		for(Map.Entry<Topic, Set<IConstraint>> entry:topicAndConstraints.entrySet())
-		{
-			Topic topic = entry.getKey();
+		for(Map.Entry<IConstraint, Topic> entry:constraintsAndTypes.entrySet()){
 			
-			Set<Locator> subjectLocators = topic.getSubjectLocators();
+			String regExp = ((SubjectLocatorConstraint)entry.getKey()).regExp;
+			int cardMin = ((SubjectLocatorConstraint)entry.getKey()).cardMin;
+			int cardMax = ((SubjectLocatorConstraint)entry.getKey()).cardMax;
 			
-			// check each constraint
-			for(IConstraint constraint:entry.getValue())
-			{
-				if(!(constraint instanceof SubjectLocatorConstraint))
-					throw new TMCLValidatorException("Constraint is no Subject Locator Constraint.");
+			for(Topic instance:getTopics(entry.getValue())){
 				
-				SubjectLocatorConstraint sl_constraint = (SubjectLocatorConstraint)constraint;
+				Set<Locator> sl = instance.getSubjectLocators();
 				
-				if(subjectLocators.size() < sl_constraint.cardMin)
-				{
-					addInvalidConstruct(topic, "Topic has too few subject locator.", invalidConstructs);
-				}
+				if(cardMin > sl.size())
+					addInvalidConstruct(instance, "The topic has too few subject locator [" + sl.size() + " of min " + cardMin + "]", invalidConstructs);
 				
-				if(sl_constraint.cardMax != -1 && subjectLocators.size() > sl_constraint.cardMin)
-				{
-					addInvalidConstruct(topic, "Topic has too many subject locator.", invalidConstructs);
-				}
-				
-				// check regular expression
-				for(Locator subjectIdentifier:subjectLocators)
-				{
-					if(!subjectIdentifier.getReference().matches(sl_constraint.regExp))
-					{
-						addInvalidConstruct(topic, "Subject locator '" + subjectIdentifier.getReference() + "' doesn't macht the reqular expression '" + sl_constraint.regExp + "'.", invalidConstructs);
-					}
-				}
+				if(cardMax != -1 && cardMax < sl.size())
+					addInvalidConstruct(instance, "The topic has too many subject locator [" + sl.size() + " of max " + cardMin + "]", invalidConstructs);
+			
+				// check regex
+				for(Locator l:sl)
+					if(!l.getReference().matches(regExp))
+						addInvalidConstruct(instance, "The subject locator '" + l.getReference() +  "' doesn't match the regular expression '" + regExp + "'", invalidConstructs);
 			}
 		}
 	}

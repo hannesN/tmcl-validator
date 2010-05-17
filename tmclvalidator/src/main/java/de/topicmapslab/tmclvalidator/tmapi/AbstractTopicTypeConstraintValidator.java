@@ -38,19 +38,33 @@ public class AbstractTopicTypeConstraintValidator  extends AbstractTMAPIValidato
 	public void validate(TopicMap mergedTopicMap, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException
 	{
 		TypeInstanceIndex typeInstanceIndex = mergedTopicMap.getIndex(TypeInstanceIndex.class);
+		
+		Map<IConstraint, Topic> constraintsAndTypes = getConstraintsAndTypes(mergedTopicMap, CONSTRAINED_TOPIC_TYPE, ABSTRACT_CONSTRAINT);
+		
+		// check each type if instances exist
+		
+		for(Map.Entry<IConstraint, Topic> entry:constraintsAndTypes.entrySet()){
 			
-		// get constrained types and corresponding constraints
-		Map<Topic, Set<IConstraint> > typesAndConstraints = getConstructTypesAndConstraints(mergedTopicMap, CONSTRAINED_TOPIC_TYPE, ABSTRACT_CONSTRAINT);
-
-		for(Map.Entry<Topic, Set<IConstraint>> entry:typesAndConstraints.entrySet())
-		{
-			Collection<Topic> instances = typeInstanceIndex.getTopics(entry.getKey());
+			Collection<Topic> instances = typeInstanceIndex.getTopics(entry.getValue());
 			
 			if(!instances.isEmpty())
 			{
-				addInvalidConstruct(entry.getKey(), "The topic has to be abstract.", invalidConstructs);
+				addInvalidConstruct(entry.getValue(), "The topic has to be abstract.", invalidConstructs);
 			}
 		}
+
+//		// get constrained types and corresponding constraints
+//		Map<Topic, Set<IConstraint> > typesAndConstraints = getConstructTypesAndConstraints(mergedTopicMap, CONSTRAINED_TOPIC_TYPE, ABSTRACT_CONSTRAINT);
+//
+//		for(Map.Entry<Topic, Set<IConstraint>> entry:typesAndConstraints.entrySet())
+//		{
+//			Collection<Topic> instances = typeInstanceIndex.getTopics(entry.getKey());
+//			
+//			if(!instances.isEmpty())
+//			{
+//				addInvalidConstruct(entry.getKey(), "The topic has to be abstract.", invalidConstructs);
+//			}
+//		}
 	}
 
 }
