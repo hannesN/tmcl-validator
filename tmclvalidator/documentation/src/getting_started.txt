@@ -8,7 +8,7 @@ hg clone https://tmcl-validator.googlecode.com/hg/ tmcl-validator
 For using the TMCL validator you have to have some dependent libraries within your search path. 
 The following table shows a list of those libraries. You could also use Maven to resolve those dependencies.
 
-.Table 1: dependencies of the TMCL validator 
+.Table 2: dependencies of the TMCL validator 
 [options="header"]
 |=============================
 |library |description |scope
@@ -23,7 +23,7 @@ The following table shows a list of those libraries. You could also use Maven to
 
 The TMCL loader which is used to running the tests has some addition dependencies:
 
-.Table 2: dependencies of the TMCL Loader 
+.Table 3: dependencies of the TMCL Loader 
 [options="header"]
 |=============================
 |library |description

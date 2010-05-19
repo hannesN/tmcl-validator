@@ -1,4 +1,38 @@
-== Scope
+== Scope ==
    
-The Topic Maps Constraint Language (TMCL, ISO 19756) is a language defined to specify constraints and schemas for topic maps. The TMCL validator validates a given topic map against a schema compatible to the current draft (2009-11-19, http://www.isotopicmaps.org/tmcl/tmcl.html). For performance reason the currenct version of the validator (1.2) does only a loose validation, i.e. ignores the global validation rule.
-    
+The Topic Maps Constraint Language (TMCL, ISO 19756) is a language defined to specify constraints and schemas for topic maps. 
+The TMCL validator validates a given topic map against schemas compatible to the current draft (2009-11-19, http://www.isotopicmaps.org/tmcl/tmcl.html). 
+
+While the TMCL Draft requires a strict validation, the current implementation of the TMCL validator only supports loose validation.
+See <<_validation_behavior, 1.1>> for a more detailed description on the validator behavior.  
+
+=== Validation behavior ===
+
+Loose validation means that the validator ignores the global validation rule in most of the cases, i.e. constructs for which no
+constraints exist are considered valid. The behavior with respect to each constraint is described in the following table.
+
+.Table 1: Behavior of the TMCL validator
+[options="header"]
+|=============================
+|constraint |description
+|tmcl:abstract-constraint | Each specified type for which an instance exist is invalid.
+|tmcl:subject-identifier-constraint | Topic of the specified type which number of subject identifier are out of bounds, or for which a subject identifier exist who does not match the specified regular expression, are invalid. 
+|tmcl:subject-locator-constraint | Topic of the specified type which number of subject locator are out of bounds, or for which a subject locator exist who does not match the specified regular expression, are invalid.
+|tmcl:item-identifier-constraint | Not implemented yet.
+|tmcl:topic-name-constraint | Topics of the specified type are invalid if the number of names of the specified name-type are is out of bounds.
+|tmcl:variant-name-constraint | Topics of the specified type are invalid if they have names of the specified name-type which number of variants having the specified scope are out of bounds.
+|tmcl:topic-occurrence-constraint | Topics of the specified type are invalid if the number of occurrences of the specified occurrence-type are is out of bounds.
+|tmcl:topic-role-constraint | Topic of the specified type are invalid of the number of roles of the specified role-type played in associations of the specified association-type are out of bounds. 
+|tmcl:scope-constraint | Names, occurrences and associations of the specified type are invalid when the number of themes of the specified type are out of bounds.
+|tmcl:scope-required-constraint | Names, occurrences and associations of the specified type belonging to topics of the specified topic-type are invalid if the number of themes of the specified theme instance are out of bounds.
+|tmcl:reifier-constraint | Names, occurrences and associations of the specified type are invalid if the number of reifier (0 or 1) of the specified type is out of bounds.
+|tmcl:topic-reifies-constraint | Topics of the specified type are invalid of the number of construct (0 or 1) which are reified by them is out of bounds.
+|tmcl:association-role-constraint | Associations of the specified type are invalid of the number of roles of the specified role-type are out of bounds.
+|tmcl:role-combination-constraint | Associations of the specified type are invalid if any combination of two roles exist for which no appropriate role combination constraint exist.
+|tmcl:occurrence-datatype-constraint | Occurrences of the specified type are invalid of their datatype is unequal the specified datatype.
+|tmcl:unique-value-constraint | Names and occurrences of the specified type are invalid if an other name or occurrence of the same type, having the same value, exist.
+|tmcl:regular-expression-constraint | Names and occurrences of the specified type are invalid of their value does not match the specified regular expression.
+|=============================
+
+
+
