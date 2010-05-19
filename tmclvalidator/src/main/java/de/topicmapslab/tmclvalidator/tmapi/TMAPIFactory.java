@@ -6,8 +6,8 @@
  */
 package de.topicmapslab.tmclvalidator.tmapi;
 
-import gnu.trove.THashSet;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.tmapi.core.Topic;
@@ -34,7 +34,7 @@ public class TMAPIFactory implements IConstraintValidatorFactory {
 	public Set<IConstraintValidator> getConstraintValidators(TopicMap topicMap) {
 	    
 		// create empty set
-		Set<IConstraintValidator> constraints = new THashSet<IConstraintValidator>();
+		Set<IConstraintValidator> constraints = new HashSet<IConstraintValidator>();
 		
 		// add declaration constraint validator
 		
