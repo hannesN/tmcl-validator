@@ -18,7 +18,7 @@ constraints exist are considered valid. The behavior with respect to each constr
 |tmcl:abstract-constraint | Each specified type for which an instance exist is invalid.
 |tmcl:subject-identifier-constraint | Topic of the specified type which number of subject identifier are out of bounds, or for which a subject identifier exist who does not match the specified regular expression, are invalid. 
 |tmcl:subject-locator-constraint | Topic of the specified type which number of subject locator are out of bounds, or for which a subject locator exist who does not match the specified regular expression, are invalid.
-|tmcl:item-identifier-constraint | Not implemented yet.
+|tmcl:item-identifier-constraint | Constructs of the specified type which number of item identifiers is out of bounds or for which an item identifier exist who does not match the specified regular expression, are invalid.
 |tmcl:topic-name-constraint | Topics of the specified type are invalid if the number of names of the specified name-type are is out of bounds.
 |tmcl:variant-name-constraint | Topics of the specified type are invalid if they have names of the specified name-type which number of variants having the specified scope are out of bounds.
 |tmcl:topic-occurrence-constraint | Topics of the specified type are invalid if the number of occurrences of the specified occurrence-type are is out of bounds.
@@ -30,7 +30,7 @@ constraints exist are considered valid. The behavior with respect to each constr
 |tmcl:association-role-constraint | Associations of the specified type are invalid of the number of roles of the specified role-type are out of bounds.
 |tmcl:role-combination-constraint | Associations of the specified type are invalid if any combination of two roles exist for which no appropriate role combination constraint exist.
 |tmcl:occurrence-datatype-constraint | Occurrences of the specified type are invalid of their datatype is unequal the specified datatype.
-|tmcl:unique-value-constraint | Names and occurrences of the specified type are invalid if an other name or occurrence of the same type, having the same value, exist.
+|tmcl:unique-value-constraint | Names and occurrences of the specified type are invalid if an other name or occurrence of the same type has the same value.
 |tmcl:regular-expression-constraint | Names and occurrences of the specified type are invalid of their value does not match the specified regular expression.
 |=============================
 

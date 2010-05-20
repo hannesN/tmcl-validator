@@ -31,6 +31,7 @@ import de.topicmapslab.tmclvalidator.ValidationResult;
 import de.topicmapslab.tmclvalidator.tmapi.constraint.AbstractTopicTypeConstraint;
 import de.topicmapslab.tmclvalidator.tmapi.constraint.AssociationRoleConstraint;
 import de.topicmapslab.tmclvalidator.tmapi.constraint.IConstraint;
+import de.topicmapslab.tmclvalidator.tmapi.constraint.ItemIdentifierConstraint;
 import de.topicmapslab.tmclvalidator.tmapi.constraint.OccurrenceDatatypeConstraint;
 import de.topicmapslab.tmclvalidator.tmapi.constraint.RegularExpressionConstraint;
 import de.topicmapslab.tmclvalidator.tmapi.constraint.ReifierConstraint;
@@ -80,6 +81,8 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 	private static final String UNIQUE_VALUE_CONSTRAINT = "http://psi.topicmaps.org/tmcl/unique-value-constraint";
 	private static final String REGULAR_EXPRESSION_CONSTRAINT = "http://psi.topicmaps.org/tmcl/regular-expression-constraint";
 	private static final String VARIANT_NAME_CONSTRAINT = "http://psi.topicmaps.org/tmcl/variant-name-constraint";
+	private static final String ITEM_IDENTIFIER_CONSTRAINT = "http://psi.topicmaps.org/tmcl/item-identifier-constraint";
+
 
 	private Topic supertype_subtype;
 	
@@ -156,6 +159,7 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 		
     	return result;
     }
+
     
     /**
      * Returns occurrences of a specific type. 
@@ -241,6 +245,29 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
     	return result;
     	
     }
+    
+    /**
+     * Returns roles of a specific type. 
+     * @param type - The topic type.
+     * @return A set of topics. May be empty but never null.
+     */
+    protected Set<Role> getRoles(Topic type){
+    	
+    	Set<Role> result = new HashSet<Role>();
+    	Set<Topic> transientTypes = getTransientTypes(type);
+    	
+    	TypeInstanceIndex typeInstanceIndex = type.getTopicMap().getIndex(TypeInstanceIndex.class);
+    	
+    	for(Topic transientType:transientTypes){
+    		
+    		Collection<Role> roles = typeInstanceIndex.getRoles(transientType);
+    		result.addAll(roles);
+    	}
+    	
+    	return result;
+    	
+    }
+    
     
     /**
      * Returns topic names of a specific type. 
@@ -494,6 +521,9 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 		
 		if (constraintType.getSubjectIdentifiers().contains(constraintType.getTopicMap().createLocator(VARIANT_NAME_CONSTRAINT)))
 			return new VariantNameConstraint();
+		
+		if (constraintType.getSubjectIdentifiers().contains(constraintType.getTopicMap().createLocator(ITEM_IDENTIFIER_CONSTRAINT)))
+			return new ItemIdentifierConstraint();
 
 		throw new TMCLValidatorException("Unknown constraint type: " + constraintType);
 	}
