@@ -69,10 +69,6 @@ public class TopicRoleConstraintsValidatorTest extends AbstractTest {
 	
 	@Test // cardinality to high
 	public final void testCase06() throws Exception {
-
-		System.out.println(testMapFile_06);
-		System.out.println(testSchemaFile_06);
-		
 		checkForInvalidTopic(testMapFile_06, testSchemaFile_06, "http://tmclvalidator.topicmapslab.de/instance_1");
     }
 	

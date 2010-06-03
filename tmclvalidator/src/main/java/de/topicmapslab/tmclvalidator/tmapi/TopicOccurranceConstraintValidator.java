@@ -37,8 +37,8 @@ public class TopicOccurranceConstraintValidator extends AbstractTMAPIValidator {
 	    super(id, useIdentifierInMessages);
     }
 
-	public void validate(TopicMap mergedTopicMap, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException 
-	{
+	public void validate(TopicMap mergedTopicMap, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException{
+		
 		Map<IConstraint,Topic> constraintsAndTypes = getConstraintsAndTypes(mergedTopicMap, CONSTRAINT_TOPIC_TYPE, TOPIC_OCCURRENCE_CONSTRAINT);
 		
 		for(Map.Entry<IConstraint, Topic> entry:constraintsAndTypes.entrySet()){

@@ -57,25 +57,25 @@ public abstract class AbstractTest {
 	@After
     public void tearDown() throws Exception {
 		
-		if(this.results == null){
-			System.out.println("No Results");
-			return;
-		}
-		
-		if(this.results.isEmpty()){
-			System.out.println("No Results");
-			return;
-		}
-		
-		for(Map.Entry<Construct, Set<ValidationResult>> entry:this.results.entrySet()){
-			
-			System.out.println("Invalid construct: " + getBestName(entry.getKey()));
-			
-			for(ValidationResult r:entry.getValue()){
-				System.out.println(r.getMessage() + "(" + r.getConstraintId() + ")");
-			}
-			
-		}
+//		if(this.results == null){
+//			System.out.println("No Results");
+//			return;
+//		}
+//		
+//		if(this.results.isEmpty()){
+//			System.out.println("No Results");
+//			return;
+//		}
+//		
+//		for(Map.Entry<Construct, Set<ValidationResult>> entry:this.results.entrySet()){
+//			
+//			System.out.println("Invalid construct: " + getBestName(entry.getKey()));
+//			
+//			for(ValidationResult r:entry.getValue()){
+//				System.out.println(r.getMessage() + "(" + r.getConstraintId() + ")");
+//			}
+//			
+//		}
 		
 	}
 	
