@@ -44,13 +44,13 @@ public class UniqueValueConstraintValidator extends AbstractTMAPIValidator {
 	
 	public void validate(TopicMap mergedTopicMap, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException 
 	{
-		TypeInstanceIndex typeInstanceIndex = mergedTopicMap.getIndex(TypeInstanceIndex.class);
+		TypeInstanceIndex typeInstanceIndex = getTypeInstanceIndex(mergedTopicMap);
 		
 		// get constrained types and corresponding constraints
 		Map<Topic, Set<IConstraint> > typesAndConstraints = getConstructTypesAndConstraints(mergedTopicMap, CONSTRAINT_STATEMENT, UNIQUE_VALUE_CONSTRAINT);
 
 		// get literal index
-		LiteralIndex literalIndex = mergedTopicMap.getIndex(LiteralIndex.class);
+		LiteralIndex literalIndex = getLiteralIndex(mergedTopicMap);
 		if(!literalIndex.isOpen()) literalIndex.open();
 		
 		for(Map.Entry<Topic, Set<IConstraint>> entry:typesAndConstraints.entrySet())

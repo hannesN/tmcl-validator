@@ -38,7 +38,7 @@ public class AbstractTopicTypeConstraintValidator  extends AbstractTMAPIValidato
 
 	public void validate(TopicMap mergedTopicMap, Map<Construct, Set<ValidationResult>> invalidConstructs) throws TMCLValidatorException
 	{
-		TypeInstanceIndex typeInstanceIndex = mergedTopicMap.getIndex(TypeInstanceIndex.class);
+		TypeInstanceIndex typeInstanceIndex = getTypeInstanceIndex(mergedTopicMap);
 		
 		Map<IConstraint, Topic> constraintsAndTypes = getConstraintsAndTypes(mergedTopicMap, CONSTRAINED_TOPIC_TYPE, ABSTRACT_CONSTRAINT);
 		

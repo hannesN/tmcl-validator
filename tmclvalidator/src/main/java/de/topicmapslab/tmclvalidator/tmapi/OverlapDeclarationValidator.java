@@ -57,7 +57,7 @@ public class OverlapDeclarationValidator extends AbstractTMAPIValidator {
 		
 		Set<Set<Topic>> overlays = new HashSet<Set<Topic>>();
 		
-		TypeInstanceIndex typeInstanceIndex = mergedTopicMap.getIndex(TypeInstanceIndex.class);
+		TypeInstanceIndex typeInstanceIndex = getTypeInstanceIndex(mergedTopicMap);
 
 		Topic constraintType = mergedTopicMap.getTopicBySubjectIdentifier(mergedTopicMap.createLocator(OVERLAP_DECLARATION));
 		

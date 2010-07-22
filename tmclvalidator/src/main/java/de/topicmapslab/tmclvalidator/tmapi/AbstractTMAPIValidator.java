@@ -23,6 +23,7 @@ import org.tmapi.core.Occurrence;
 import org.tmapi.core.Role;
 import org.tmapi.core.Topic;
 import org.tmapi.core.TopicMap;
+import org.tmapi.index.LiteralIndex;
 import org.tmapi.index.TypeInstanceIndex;
 
 import de.topicmapslab.tmclvalidator.IConstraintValidator;
@@ -86,6 +87,8 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 
 	private Topic supertype_subtype;
 	
+	private TypeInstanceIndex typeInstanceIndex;
+	private LiteralIndex literalIndex;
 	
 	/**
 	 * Constructor
@@ -134,8 +137,8 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 			throw new TMCLValidatorException("Constraint type is null.");
     	
 		// get type instance index
-		TypeInstanceIndex typeInstanceIndex = constraintType.getTopicMap().getIndex(TypeInstanceIndex.class);
-		
+		TypeInstanceIndex typeInstanceIndex = getTypeInstanceIndex(constraintType.getTopicMap());
+			
 		// get constraint instances
 		Collection<Topic> constraints = typeInstanceIndex.getTopics(constraintType);
 		
@@ -171,7 +174,7 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
     	Set<Occurrence> result = new HashSet<Occurrence>();
     	Set<Topic> transientTypes = getTransientTypes(type);
     	
-    	TypeInstanceIndex typeInstanceIndex = type.getTopicMap().getIndex(TypeInstanceIndex.class);
+    	TypeInstanceIndex typeInstanceIndex = getTypeInstanceIndex(type.getTopicMap());
     	
     	for(Topic transientType:transientTypes){
     		
@@ -192,7 +195,7 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
     	Set<Name> result = new HashSet<Name>();
     	Set<Topic> transientTypes = getTransientTypes(type);
     	
-    	TypeInstanceIndex typeInstanceIndex = type.getTopicMap().getIndex(TypeInstanceIndex.class);
+    	TypeInstanceIndex typeInstanceIndex = getTypeInstanceIndex(type.getTopicMap());
     	
     	for(Topic transientType:transientTypes){
     		
@@ -213,7 +216,7 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
     	Set<Association> result = new HashSet<Association>();
     	Set<Topic> transientTypes = getTransientTypes(type);
     	
-    	TypeInstanceIndex typeInstanceIndex = type.getTopicMap().getIndex(TypeInstanceIndex.class);
+    	TypeInstanceIndex typeInstanceIndex = getTypeInstanceIndex(type.getTopicMap());
     	
     	for(Topic transientType:transientTypes){
     		
@@ -234,7 +237,7 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
     	Set<Topic> result = new HashSet<Topic>();
     	Set<Topic> transientTypes = getTransientTypes(type);
     	
-    	TypeInstanceIndex typeInstanceIndex = type.getTopicMap().getIndex(TypeInstanceIndex.class);
+    	TypeInstanceIndex typeInstanceIndex = getTypeInstanceIndex(type.getTopicMap());
     	
     	for(Topic transientType:transientTypes){
     		
@@ -256,7 +259,7 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
     	Set<Role> result = new HashSet<Role>();
     	Set<Topic> transientTypes = getTransientTypes(type);
     	
-    	TypeInstanceIndex typeInstanceIndex = type.getTopicMap().getIndex(TypeInstanceIndex.class);
+    	TypeInstanceIndex typeInstanceIndex = getTypeInstanceIndex(type.getTopicMap());
     	
     	for(Topic transientType:transientTypes){
     		
@@ -445,7 +448,7 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 			throw new TMCLValidatorException("Constraint type is null.");
 
 		// get type instance index
-		TypeInstanceIndex typeInstanceIndex = constraintType.getTopicMap().getIndex(TypeInstanceIndex.class);
+		TypeInstanceIndex typeInstanceIndex = getTypeInstanceIndex(constraintType.getTopicMap());
 
 		// get constraint instances
 		Collection<Topic> constraints = typeInstanceIndex.getTopics(constraintType);
@@ -577,5 +580,23 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 		return topic.getId();
 	}
 
-		
+	protected TypeInstanceIndex getTypeInstanceIndex(TopicMap topicMap) {
+		if (typeInstanceIndex == null) {
+			typeInstanceIndex = topicMap.getIndex(TypeInstanceIndex.class);
+			if (!typeInstanceIndex.isOpen()) {
+				typeInstanceIndex.open();
+			}
+		}
+		return typeInstanceIndex;
+	}
+	
+	protected LiteralIndex getLiteralIndex(TopicMap topicMap) {
+		if (literalIndex == null) {
+			literalIndex = topicMap.getIndex(LiteralIndex.class);
+			if (!literalIndex.isOpen()) {
+				literalIndex.open();
+			}
+		}
+		return literalIndex;
+	}
 }
