@@ -43,10 +43,10 @@ public abstract class AbstractTest {
 		TopicMapSystemFactory factory = TopicMapSystemFactory.newInstance();
 		TopicMapSystem system = factory.newTopicMapSystem();
 
-		testMap = system.createTopicMap("test:test");
-		assertNotNull(testMap);
-		testSchema = system.createTopicMap("test:schema");
-		assertNotNull(testSchema);
+		this.testMap = system.createTopicMap("test:test");
+		assertNotNull(this.testMap);
+		this.testSchema = system.createTopicMap("test:schema");
+		assertNotNull(this.testSchema);
 		
 		if(this.results == null)
 			this.results = new HashMap<Construct, Set<ValidationResult>>();
@@ -81,8 +81,8 @@ public abstract class AbstractTest {
 	
 	protected void readMaps(String mapFile, String schemaFile) throws Exception{
 		
-		TMCLLoader.readTMCLSchema(testMap, new File(mapFile));
-		TMCLLoader.readTMCLSchema(testSchema, new File(schemaFile));
+		TMCLLoader.readTMCLSchema(this.testMap, new File(mapFile));
+		TMCLLoader.readTMCLSchema(this.testSchema, new File(schemaFile));
 	}
 	
 	protected Map<Construct, Set<ValidationResult>> runValidator(String mapFile, String schemaFile) throws Exception{
@@ -93,11 +93,11 @@ public abstract class AbstractTest {
 	
 	protected Map<Construct, Set<ValidationResult>> runValidator() throws Exception{
 	
-		if(testSchema == null) throw new Exception("Schema is null!");
-		if(testMap == null) throw new Exception("Topic map is null!");
+		if(this.testSchema == null) throw new Exception("Schema is null!");
+		if(this.testMap == null) throw new Exception("Topic map is null!");
 		
 		TMCLValidator validator = new TMCLValidator(); 
-		Map<Construct, Set<ValidationResult>> results = validator.validate(testMap, testSchema);
+		Map<Construct, Set<ValidationResult>> results = validator.validate(this.testMap, this.testSchema);
 		
 		return results;
 	}
@@ -142,7 +142,8 @@ public abstract class AbstractTest {
 		assertEquals(1, this.results.size());
 		assertTrue(this.results.keySet().iterator().next().equals(invalidTopic));
 	}
-	
+
+	@Deprecated
 	private String getBestName(Construct construct) {
 
 		if(construct instanceof Topic){

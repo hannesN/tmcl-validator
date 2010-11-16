@@ -95,13 +95,13 @@ public class ScopeConstraintValidatorTest extends AbstractTest {
 
 		readMaps(testMapFile_08, testSchemaFile_08);
 		
-		Topic familie_name = testMap.getTopicBySubjectIdentifier(testMap.createLocator("http://tmclvalidator.topicmapslab.de/familie_name"));
+		Topic familie_name = this.testMap.getTopicBySubjectIdentifier(this.testMap.createLocator("http://tmclvalidator.topicmapslab.de/familie_name"));
 		assertNotNull(familie_name);
 		
-		Topic description = testMap.getTopicBySubjectIdentifier(testMap.createLocator("http://tmclvalidator.topicmapslab.de/description"));
+		Topic description = this.testMap.getTopicBySubjectIdentifier(this.testMap.createLocator("http://tmclvalidator.topicmapslab.de/description"));
 		assertNotNull(description);
 		
-		Topic lives_in = testMap.getTopicBySubjectIdentifier(testMap.createLocator("http://tmclvalidator.topicmapslab.de/lives_in"));
+		Topic lives_in = this.testMap.getTopicBySubjectIdentifier(this.testMap.createLocator("http://tmclvalidator.topicmapslab.de/lives_in"));
 		assertNotNull(lives_in);
 		
 		this.results = runValidator();

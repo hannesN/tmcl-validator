@@ -39,7 +39,7 @@ public class AbstractTopicTypeConstraintValidatorTest extends AbstractTest {
 		readMaps(testMapFile_02, testSchemaFile_02);
 
 		// "creature" is supposed to be invalid
-		Topic creature = testMap.getTopicBySubjectIdentifier(testMap.createLocator("http://tmclvalidator.topicmapslab.de/creature"));
+		Topic creature = this.testMap.getTopicBySubjectIdentifier(this.testMap.createLocator("http://tmclvalidator.topicmapslab.de/creature"));
 		assertNotNull(creature);
 		
 		this.results = runValidator();

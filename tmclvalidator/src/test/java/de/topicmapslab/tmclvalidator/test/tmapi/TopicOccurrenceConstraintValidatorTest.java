@@ -24,6 +24,10 @@ public class TopicOccurrenceConstraintValidatorTest extends AbstractTest {
 	private static String testMapFile_05 = "./src/test/resources/topic-occurrence-constraint/test_case_05_map.ctm";
 	private static String testSchemaFile_05 = "./src/test/resources/topic-occurrence-constraint/test_case_05_schema.ctm";
 	
+	private static String testMapFile_06 = "./src/test/resources/topic-occurrence-constraint/kind-of-bug-in-tmcl-instances.ctm";
+	private static String testSchemaFile_06 = "./src/test/resources/topic-occurrence-constraint/kind-of-bug-in-tmcl-schema.ctm";
+	
+	
 	@Test
     public final void testCase01() throws Exception {
 
@@ -47,6 +51,12 @@ public class TopicOccurrenceConstraintValidatorTest extends AbstractTest {
     public final void testCase05() throws Exception {
 
 		this.results = runValidator(testMapFile_05, testSchemaFile_05);
+		assertEquals(0, this.results.size());
+    }
+	
+	@Test
+    public final void testCase06() throws Exception {
+		this.results = runValidator(testMapFile_06, testSchemaFile_06);
 		assertEquals(0, this.results.size());
     }
 	
