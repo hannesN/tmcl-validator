@@ -51,7 +51,7 @@ public class RegularExpressionConstraintValidator extends AbstractTMAPIValidator
 			
 			for(Name name:names){
 				if(!name.getValue().matches(regEx))
-					addInvalidConstruct(name, "Name '" + name.getValue() + "' doesn't macht the reqular expression '" + regEx + "'.", invalidConstructs);
+					addInvalidConstruct(name, "Name '" + name.getValue() + "' doesn't match the regular expression '" + regEx + "'.", invalidConstructs);
 			}
 			
 			// check occurrences
@@ -59,7 +59,7 @@ public class RegularExpressionConstraintValidator extends AbstractTMAPIValidator
 			
 			for(Occurrence occurrence:occurrences){
 				if(!occurrence.getValue().matches(regEx))
-					addInvalidConstruct(occurrence, "Occurrence doesn't macht the reqular expression '" + regEx + "'.", invalidConstructs);
+					addInvalidConstruct(occurrence, "Occurrence doesn't match the regular expression '" + regEx + "'.", invalidConstructs);
 			}
 		}
 	}
