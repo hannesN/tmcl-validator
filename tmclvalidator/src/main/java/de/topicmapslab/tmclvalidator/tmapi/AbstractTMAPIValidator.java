@@ -86,6 +86,8 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
 
 
 	private Topic supertype_subtype;
+	private Topic supertype;
+	private Topic subtype;
 	
 	private TypeInstanceIndex typeInstanceIndex;
 	private LiteralIndex literalIndex;
@@ -419,9 +421,40 @@ public abstract class AbstractTMAPIValidator implements IConstraintValidator {
     		this.supertype_subtype = superType.getTopicMap().getTopicBySubjectIdentifier(superType.getTopicMap().createLocator("http://psi.topicmaps.org/iso13250/model/supertype-subtype"));
     	
     	if(this.supertype_subtype == null)
-    		return Collections.EMPTY_SET;
+    		return Collections.emptySet(); // no supertype subtype association exist
+    	    	
     	
-    	return Utils.getCounterPlayers(superType, this.supertype_subtype);
+    	if(this.supertype == null)
+    		this.supertype = superType.getTopicMap().getTopicBySubjectIdentifier(superType.getTopicMap().createLocator("http://psi.topicmaps.org/iso13250/model/supertype"));
+    	
+    	if(this.supertype == null)
+    		return Collections.emptySet();
+    	
+    	if(this.subtype == null)
+    		this.subtype = superType.getTopicMap().getTopicBySubjectIdentifier(superType.getTopicMap().createLocator("http://psi.topicmaps.org/iso13250/model/subtype"));
+    	
+    	if(this.subtype == null)
+    		return Collections.emptySet();
+    	
+    	/// TODO
+    	
+    	Set<Topic> result = new HashSet<Topic>();
+    	
+    	Set<Role> supertypeRoles = superType.getRolesPlayed(this.supertype);
+    	
+    	for(Role r:supertypeRoles){
+    		
+    		if(r.getParent().getType().equals(this.supertype_subtype) && r.getParent().getRoles().size() == 2){
+    			
+    			for(Role r2:r.getParent().getRoles()){
+    				
+    				if(!r2.equals(r) && r2.getType().equals(this.subtype))
+    					result.add(r2.getPlayer());
+    			}
+    		}
+    	}
+    	
+    	return result;
 
     }
     

@@ -46,7 +46,7 @@ public class TopicOccurranceConstraintValidator extends AbstractTMAPIValidator {
 			int cardMin = ((TopicOccurrenceConstraint)entry.getKey()).cardMin;
 			int cardMax = ((TopicOccurrenceConstraint)entry.getKey()).cardMax;
 			Topic occurrenceType = ((TopicOccurrenceConstraint)entry.getKey()).occurrenceType;
-			
+									
 			for(Topic instance:getTopics(entry.getValue())){
 				
 				Set<Occurrence> occurrences = getTopicOccurrences(instance, occurrenceType);
