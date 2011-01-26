@@ -20,6 +20,7 @@ import org.tmapi.index.TypeInstanceIndex;
 
 import de.topicmapslab.tmclvalidator.TMCLValidatorException;
 import de.topicmapslab.tmclvalidator.ValidationResult;
+import de.topicmapslab.tmclvalidator.tmapi.utils.Utils;
 
 /**
  * Validator for the overlap declaration.
@@ -108,9 +109,8 @@ public class OverlapDeclarationValidator extends AbstractTMAPIValidator {
 			for(int t2=t1+1;t2<types_array.length;t2++)
 			{
 				// first check if a overlap declaration exist
-				if(overlayExist(types_array[t1], types_array[t2], overlays))
-				{
-										
+				if(overlayExist(types_array[t1], types_array[t2], overlays)){
+					continue;
 				}else if(!isSuperTypeSubType(types_array[t1], types_array[t2])) // check if an supertype subtype relationship exists
 				{
 					return false;
@@ -161,6 +161,13 @@ public class OverlapDeclarationValidator extends AbstractTMAPIValidator {
 	 */
 	private boolean overlayExist(Topic type1, Topic type2, Set<Set<Topic>> overlays)
 	{
+		if(Utils.isTMCLTopicType(type1) && Utils.isTMCLType(type2))
+			return true;
+		
+		if(Utils.isTMCLTopicType(type2) && Utils.isTMCLType(type1))
+			return true;
+		
+		
 		for(Set<Topic> set:overlays)
 		{
 			if(set.contains(type1) && set.contains(type2))

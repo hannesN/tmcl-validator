@@ -4,9 +4,12 @@
  */
 package de.topicmapslab.tmclvalidator.tmapi.utils;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.tmapi.core.Locator;
 import org.tmapi.core.Role;
 import org.tmapi.core.Topic;
 import org.tmapi.core.Typed;
@@ -19,6 +22,17 @@ import de.topicmapslab.tmclvalidator.TMCLValidatorException;
  */
 public class Utils {
 
+	private static String tmclTopicType = "http://psi.topicmaps.org/tmcl/topic-type";
+	
+	private static Set<String> tmclTypes = new HashSet<String>(); 
+	
+	static {
+		tmclTypes.add("http://psi.topicmaps.org/tmcl/name-type");
+		tmclTypes.add("http://psi.topicmaps.org/tmcl/occurrence-type");
+		tmclTypes.add("http://psi.topicmaps.org/tmcl/association-type");
+		tmclTypes.add("http://psi.topicmaps.org/tmcl/role-type");
+	};
+	
 
 	/**
 	 * Gets the counter player of an binary association.
@@ -112,5 +126,21 @@ public class Utils {
 		}
 	}
 
+	public static boolean isTMCLTopicType(Topic type){
+		
+		for(Locator l:type.getSubjectIdentifiers())
+			if(l.getReference().equals(tmclTopicType))
+				return true;
+				
+		return false;
+	}
 	
+	public static boolean isTMCLType(Topic type){
+		
+		for(Locator l:type.getSubjectIdentifiers())
+			if(tmclTypes.contains(l.getReference()))
+				return true;
+		
+		return false;
+	}
 }

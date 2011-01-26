@@ -18,7 +18,7 @@ import org.tmapi.core.TopicMap;
  */
 public interface IConstraintValidator{
 
-	/**
+	/**  Topic has more then one type
 	 * Validates a topic map which is merged with the used schema.
 	 * @param topicMap - The topic map containing the schema.
 	 * @param invalidConstructs - Reference to an result set which will be filled with invalid constructs.
