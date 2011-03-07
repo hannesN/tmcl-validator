@@ -44,6 +44,10 @@ public class OccurrenceDatatypeConstraintValidator extends AbstractTMAPIValidato
 		for(Map.Entry<IConstraint, Topic> entry:constraintsAndTypes.entrySet()){
 			
 			String datatype = ((OccurrenceDatatypeConstraint)entry.getKey()).datatype;
+			
+			if(datatype.equals("http://www.w3.org/2001/XMLSchema#anyType"))
+				return;
+			
 			Set<Occurrence> occurrences = getOccurrences(entry.getValue());
 			
 			for(Occurrence occurrence:occurrences){
