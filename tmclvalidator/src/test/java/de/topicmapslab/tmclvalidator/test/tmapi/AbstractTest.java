@@ -25,8 +25,8 @@ import org.tmapi.core.TopicMap;
 import org.tmapi.core.TopicMapSystem;
 import org.tmapi.core.TopicMapSystemFactory;
 import org.tmapi.core.Typed;
+import org.tmapix.io.CTMTopicMapReader;
 
-import de.topicmapslab.tmcl_loader.TMCLLoader;
 import de.topicmapslab.tmclvalidator.TMCLValidator;
 import de.topicmapslab.tmclvalidator.ValidationResult;
 
@@ -81,8 +81,14 @@ public abstract class AbstractTest {
 	
 	protected void readMaps(String mapFile, String schemaFile) throws Exception{
 		
-		TMCLLoader.readTMCLSchema(this.testMap, new File(mapFile));
-		TMCLLoader.readTMCLSchema(this.testSchema, new File(schemaFile));
+		CTMTopicMapReader reader1 = new CTMTopicMapReader(this.testMap, new File(mapFile));
+		reader1.read();
+		
+		CTMTopicMapReader reader2 = new CTMTopicMapReader(this.testSchema, new File(schemaFile));
+		reader2.read();
+//		
+//		TMCLLoader.readTMCLSchema(this.testMap, new File(mapFile));
+//		TMCLLoader.readTMCLSchema(this.testSchema, new File(schemaFile));
 	}
 	
 	protected Map<Construct, Set<ValidationResult>> runValidator(String mapFile, String schemaFile) throws Exception{

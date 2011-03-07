@@ -1,6 +1,6 @@
 %encoding "UTF-8"
 %version 1.0
-
+%include http://www.isotopicmaps.org/tmcl/templates.ctm
 
 # prefixes
 
